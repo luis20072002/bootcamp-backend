@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import hashlib
-
+from datetime import date,time
 
 # NOTA: SEPARAR MODELOS A OTRO ARCHIVO DIFERENTE AL MAIN
 # SOLO DEBERIAN HABER ENDPOINTS EN ESTE ARCHIVO
@@ -37,6 +37,15 @@ class Curso(BaseModel):
     nombre : str
     codigo : str
     id_docente : int
+    
+
+class Turno(BaseModel):
+    id : int
+    fecha : date
+    hora_inicio : time
+    hora_fin : time
+    estado_turno : bool
+
 
 # --- BASES DE DATOS SIMULADAS ---
 
@@ -45,7 +54,7 @@ usuarios: list[dict] = [] #check
 
 cursos: list[dict] = [] # check
 Horarios_trabajo: list[dict] = []
-turnos: list[dict] = []
+turnos: list[dict] = [] 
 Planilla_trabajo: list[dict] = []
 docentes: list[dict] = [] #check
 Registros_aula: list[dict] = []
@@ -251,3 +260,58 @@ def eliminar_curso(id: int):
             return {"mensaje": "curso eliminado"}
 
     return {"error": "curso no encontrado"}
+
+
+#--- TURNOS ---
+@app.post("/turnos")
+def crear_turno(datos: Turno):
+
+    turno = {
+        "id": datos.id,
+        "fecha": datos.fecha,
+        "hora_inicio": datos.hora_inicio,
+        "hora_fin": datos.hora_fin
+    }
+
+    turnos.append(turno)
+
+    return {"mensaje": "turno creado", "turno": turno}
+
+
+@app.get("/turnos")
+def get_turnos():
+    return turnos
+
+
+@app.get("/turnos/{id}")
+def get_turno_by_id(id: int):
+
+    for turno in turnos:
+        if turno["id"] == id:
+            return turno
+
+    return {"error": "turno no encontrado"}
+
+
+@app.put("/turnos/{id}")
+def actualizar_turno(id: int, datos: Turno):
+
+    for turno in turnos:
+        if turno["id"] == id:
+            turno["fecha"] = datos.fecha
+            turno["hora_inicio"] = datos.hora_inicio
+            turno["hora_fin"] = datos.hora_fin
+
+            return {"mensaje": "turno actualizado", "turno": turno}
+
+    return {"error": "turno no encontrado"}
+
+@app.delete("/turnos/{id}")
+def eliminar_turno(id: int):
+
+    for i, turno in enumerate(turnos):
+        if turno["id"] == id:
+            turnos.pop(i)
+            return {"mensaje": "turno eliminado"}
+
+    return {"error": "turno no encontrado"}
