@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 import hashlib
 from datetime import date,time
 
@@ -11,11 +11,11 @@ app = FastAPI()
 # --- MODELOS ---
 
 class Aula(BaseModel):
-    nombre: str
+    codigo: str = Field(pattern=r"^A[1-5]-[1-6][0-9]{2}$")
+    nombre: str | None = None
     edificio: str
     capacidad: int
-
-
+    
 class Usuario(BaseModel):
     nombre: str
     pwsd: str
@@ -66,8 +66,9 @@ Registros_aula: list[dict] = []
 def subiraula(datos: Aula):
 
     nueva_aula = {
-        "id": len(aula),
-        "nombre": datos.nombre,
+        "id": len(aula),          # id interno
+        "codigo": datos.codigo,   # A5-302
+        "nombre": datos.nombre if datos.nombre else datos.codigo,
         "edificio": datos.edificio,
         "capacidad": datos.capacidad
     }
@@ -92,7 +93,8 @@ def actualizaraula(id: int, datos: Aula):
 
     for registro in aula:
         if registro["id"] == id:
-            registro["nombre"] = datos.nombre
+            registro["codigo"] = datos.codigo
+            registro["nombre"] = datos.nombre if datos.nombre else datos.codigo
             registro["edificio"] = datos.edificio
             registro["capacidad"] = datos.capacidad
 
@@ -100,14 +102,23 @@ def actualizaraula(id: int, datos: Aula):
 
     return {"error": "aula no encontrada"}
 
-
 @app.delete("/aula/{id}")
 def eliminaraula(id: int):
 
     for i, registro in enumerate(aula):
         if registro["id"] == id:
             aula.pop(i)
-            return {"mensaje": "aula eliminada"}
+            return {"mensaje": "aula eliminada con id: " + str(id)}
+
+    return {"error": "aula no encontrada"}
+
+#endpoint para buscar por aula:
+@app.get("/aula/codigo/{codigo}")
+def get_aula_by_codigo(codigo: str):
+
+    for registro in aula:
+        if registro["codigo"] == codigo:
+            return registro
 
     return {"error": "aula no encontrada"}
 
