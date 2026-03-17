@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 import hashlib
-from datetime import date,time
+from datetime import datetime
 from Model.Role import Role
 
 class Usuario(BaseModel):
@@ -8,8 +8,8 @@ class Usuario(BaseModel):
     pwsd: str
     rol: Role
     estado: bool
-    fecha_creacion: date
-    Ultimo_login: date
+    fecha_creacion: datetime
+    Ultimo_login: datetime
 
 class UsuarioUpdate(BaseModel):
     nuevo_nombre: str
