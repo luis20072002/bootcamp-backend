@@ -10,20 +10,6 @@ app = FastAPI()
 
 # --- MODELOS ---
 
-class Aula(BaseModel):
-    codigo: str = Field(pattern=r"^A[1-5]-[1-6](0[1-9]|1[0-9]|20)$")
-    nombre: str | None = None
-    edificio: str
-    capacidad: int
-    
-class Usuario(BaseModel):
-    nombre: str
-    pwsd: str
-    admin: bool = False
-
-
-class UsuarioUpdate(BaseModel):
-    nuevo_nombre: str
 
 class Docente(BaseModel):
     id : int
@@ -47,7 +33,7 @@ class Turno(BaseModel):
     estado_turno : bool
 
 
-# --- BASES DE DATOS SIMULADAS ---
+# --- Listas ---
 
 aula: list[dict] = [] #check
 usuarios: list[dict] = [] #check
