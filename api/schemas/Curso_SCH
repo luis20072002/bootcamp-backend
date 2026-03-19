@@ -8,7 +8,7 @@ class CursoCreate(BaseModel):
     id_aula : int
     
 
-    
+
 
 class CursoResponse(BaseModel):
     id: int
@@ -16,3 +16,4 @@ class CursoResponse(BaseModel):
     nombre: str
     class Config:
         from_attributes = True
+    
