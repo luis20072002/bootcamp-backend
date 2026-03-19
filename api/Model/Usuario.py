@@ -1,14 +1,19 @@
-from pydantic import BaseModel
+
 import hashlib
-from datetime import datetime
-from model.Role import RoleEnum
+from sqlalchemy import Column, String, Integer,VARBINARY, Boolean, DateTime,ForeignKey
+from database.database import Base
+from sqlalchemy.orm import relationship
 
-class Usuario(BaseModel):
-    nombre: str
-    pwsd: str
-    rol_id: RoleEnum
-    estado: bool
-    fecha_creacion: datetime
+class Usuario(Base):
+    __tablename__="usuario"
+    id_usuario = Column(Integer,primary_key=True)
+    password = Column (VARBINARY(255), nullable=False)
+    estado = Column(Boolean,default=True, nullable=False)
+    fecha_creacion = Column(DateTime, nullable=False)
+    ultima_actividad =  Column(DateTime, nullable=False)
+    rol_id = Column(Integer,ForeignKey("roles.rol_id"))
 
-class AuxiliarUpdate(BaseModel):
-    nuevo_nombre: str
+    rol = relationship("Rol",back_populates="usuarios")
+    turnos = relationship("Turno",back_populates="usuarios")
+    planillas = relationship("Planilla",back_populates="usuario")
+    horario = relationship("Horario",back_populates="usuario")
