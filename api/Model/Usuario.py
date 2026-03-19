@@ -1,15 +1,14 @@
 from pydantic import BaseModel
 import hashlib
 from datetime import datetime
-from Model.Role import Role
+from model.Role import RoleEnum
 
 class Usuario(BaseModel):
     nombre: str
     pwsd: str
-    rol: Role
+    rol_id: RoleEnum
     estado: bool
     fecha_creacion: datetime
-    Ultimo_login: datetime
 
-class UsuarioUpdate(BaseModel):
+class AuxiliarUpdate(BaseModel):
     nuevo_nombre: str
