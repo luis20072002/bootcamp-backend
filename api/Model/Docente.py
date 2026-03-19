@@ -5,4 +5,3 @@ class Docente(BaseModel):
     nombre : str
     apellido : str
     correo : str
-    telefono: str
