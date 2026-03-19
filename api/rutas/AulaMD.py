@@ -1,11 +1,15 @@
-from fastapi import FastAPI
-from datetime import date,time
-from Model.Aula import Aula
+
+from fastapi import APIRouter
+from model.Aula import Aula
 
 
 aula: list[dict] = [] #check
 
-router = FastAPI()
+router = APIRouter(
+    prefix="/Aula",
+    tags=["Aula"]
+)
+
 # --- AULA ---
 
 @router.post("/aula")
