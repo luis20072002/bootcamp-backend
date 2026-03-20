@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-from pydantic import BaseModel,Field
-
-class Role(BaseModel):
-    id=int
-    nombre= str
-=======
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship
 from api.database.database import Base
@@ -17,4 +10,3 @@ class Rol(Base):
 
   
     usuarios = relationship("Usuario",back_populates="roles")
->>>>>>> API_DEBUG

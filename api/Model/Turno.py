@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-from pydantic import BaseModel,Field
-=======
 from sqlalchemy import Column, String, Integer,Date,Time,ForeignKey
 from sqlalchemy.orm import relationship
 from api.database.database import Base
@@ -21,4 +18,3 @@ class Turno(Base):
     planillas = relationship("Planilla",back_populates="turno")
 
     registros= relationship("Registro",back_populates="turnos")
->>>>>>> API_DEBUG

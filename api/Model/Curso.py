@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-from pydantic import BaseModel,Field
-=======
 from sqlalchemy import Column, String, Integer,ForeignKey
 from sqlalchemy.orm import relationship
 from api.database.database import Base
@@ -17,4 +14,3 @@ class Curso(Base):
     docente = relationship("Docente", back_populates="cursos") 
     aula = relationship("Aula", back_populates="cursos")
     registros = relationship("Registro",back_populates="Cursos")
->>>>>>> API_DEBUG
