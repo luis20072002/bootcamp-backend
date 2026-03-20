@@ -1,59 +1,79 @@
-from fastapi import APIRouter
-from model.Usuario import Usuario, UsuarioUpdate
-import hashlib
-from datetime import datetime
-
-usuarios: list[dict] = [] #check
-
-router = APIRouter(
-    prefix="/usuario",
-    tags=["Usuario"]
-)
-
-@router.post("/usuario")
-def crear_usuario(datos: Usuario):
-
-    hash_pwsd = hashlib.sha256(datos.pwsd.encode()).hexdigest()
-
-    usuario = {
-        "id": len(usuarios),
-        "nombre": datos.nombre,
-        "password": hash_pwsd,
-        "rol": datos.rol_id,
-        "fecha_creacion": datetime.now(),
-    }
-
-    usuarios.append(usuario)
-
-    return {"mensaje": "usuario creado", "usuario": usuario}
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from passlib.context import CryptContext # instala passlib[bcrypt]
 
 
-@router.get("/usuario/{id}")
-def get_usuario_by_id(id: int):
 
-    for usuario in usuarios:
-        if usuario["id"] == id:
-            return usuario
+from api.database.database import get_db # No tocar
+from api.Model.Usuario import Usuario # Respeta ese orden, cambia el ultimo para cambiar de modelo
+from api.schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse # Respeta ese orden, ultimo para cambiar de schema
 
-    return {"error": "usuario no encontrado"}
+router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
+# Configuración del hash
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-@router.put("/usuarios/{nombre}")
-def actualizar_nombre(nombre: str, datos: UsuarioUpdate):
+def hashear_password(password: str) -> str:
+    return pwd_context.hash(password)
 
-    for usuario in usuarios:
-        if usuario["nombre"] == nombre:
-            usuario["nombre"] = datos.nuevo_nombre
-            return {"mensaje": "usuario actualizado", "usuario": usuario}
-
-    return {"error": "usuario no encontrado"}
+def verificar_password(password: str, hashed: str) -> bool:
+    return pwd_context.verify(password, hashed)
 
 
-@router.delete("/usuario/{id}")
-def delete_user_by_ID(id: int):
-    for i, registro in enumerate(usuarios):
-        if registro["id"] == id:
-            usuarios.pop(i)
-            return {"mensaje": "Usuario eliminado"}
+@router.get("/", response_model=list[UsuarioResponse])
+def get_usuarios(db: Session = Depends(get_db)):
+    return db.query(Usuario).all()
 
-    return {"error": "Usuario no encontrado"}
+
+@router.get("/{id}", response_model=UsuarioResponse)
+def get_usuario(id: int, db: Session = Depends(get_db)):
+    usuario = db.query(Usuario).filter(Usuario.id_usuario == id).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return usuario
+
+
+@router.post("/", response_model=UsuarioResponse, status_code=201)
+def crear_usuario(datos: UsuarioCreate, db: Session = Depends(get_db)):
+    # Verificar si el nombre ya existe
+    existe = db.query(Usuario).filter(Usuario.nombre == datos.nombre).first()
+    if existe:
+        raise HTTPException(status_code=400, detail="El nombre de usuario ya existe")
+
+    # Hashear la contraseña antes de guardar
+    nuevo_usuario = Usuario(
+        nombre=datos.nombre,
+        pwsd=hashear_password(datos.pwsd),  # nunca se guarda en texto plano
+        estado=datos.estado,
+        rol_id=datos.rol_id,
+        fecha_creacion=datos.fecha_creacion
+    )
+    db.add(nuevo_usuario)
+    db.commit()
+    db.refresh(nuevo_usuario)
+    return nuevo_usuario
+
+
+@router.put("/{id}", response_model=UsuarioResponse)
+def actualizar_usuario(id: int, datos: UsuarioCreate, db: Session = Depends(get_db)):
+    usuario = db.query(Usuario).filter(Usuario.id_usuario == id).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    usuario.nombre = datos.nombre
+    usuario.pwsd = hashear_password(datos.pwsd)  # también se hashea al actualizar
+    usuario.estado = datos.estado
+    usuario.rol_id = datos.rol_id
+
+    db.commit()
+    db.refresh(usuario)
+    return usuario
+
+
+@router.delete("/{id}", status_code=204)
+def eliminar_usuario(id: int, db: Session = Depends(get_db)):
+    usuario = db.query(Usuario).filter(Usuario.id_usuario == id).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    db.delete(usuario)
+    db.commit()
