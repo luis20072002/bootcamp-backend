@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, DateTime,ForeignKey
-from api.database.database import Base
+from database.database import Base
 from sqlalchemy.orm import relationship
 
 class Planilla(Base):
