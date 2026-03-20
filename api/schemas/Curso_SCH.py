@@ -1,0 +1,19 @@
+from pydantic import BaseModel
+
+class CursoCreate(BaseModel):
+    id: int
+    nombre_curso : str
+    codigo_curso : str
+    id_docente : int
+    id_aula : int
+    
+
+
+
+class CursoResponse(BaseModel):
+    id: int
+    codigo: str
+    nombre: str
+    class Config:
+        from_attributes = True
+    
