@@ -13,8 +13,9 @@ class UsuarioResponse(BaseModel):
     fecha_creacion: datetime
     rol_id: int
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
         
 class UsuarioUpdate(BaseModel):
     nombre: str | None = None
