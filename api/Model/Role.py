@@ -9,4 +9,8 @@ class Rol(Base):
     nombre = Column(String(50), nullable=False)
 
   
+<<<<<<< HEAD
     usuarios = relationship("Usuario",back_populates="rol")
+=======
+    usuarios = relationship("Usuario",back_populates="roles")
+>>>>>>> luiapi

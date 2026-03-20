@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext # instala passlib[bcrypt]
+from datetime import datetime
 
-
-
-from database.database import get_db # No tocar
-from model.Usuario import Usuario # Respeta ese orden, cambia el ultimo para cambiar de modelo
-from schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse # Respeta ese orden, ultimo para cambiar de schema
+from api.database.database import get_db # No tocar
+from api.model.Usuario import Usuario # Respeta ese orden, cambia el ultimo para cambiar de modelo
+from api.schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse, UsuarioUpdate # Respeta ese orden, ultimo para cambiar de schema
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
@@ -46,7 +45,7 @@ def crear_usuario(datos: UsuarioCreate, db: Session = Depends(get_db)):
         pwsd=hashear_password(datos.pwsd),  # nunca se guarda en texto plano
         estado=datos.estado,
         rol_id=datos.rol_id,
-        fecha_creacion=datos.fecha_creacion
+        fecha_creacion=datetime.now(),
     )
     db.add(nuevo_usuario)
     db.commit()
@@ -55,25 +54,40 @@ def crear_usuario(datos: UsuarioCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{id}", response_model=UsuarioResponse)
-def actualizar_usuario(id: int, datos: UsuarioCreate, db: Session = Depends(get_db)):
+def actualizar_usuario(id: int, datos: UsuarioUpdate, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.id_usuario == id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
-    usuario.nombre = datos.nombre
-    usuario.pwsd = hashear_password(datos.pwsd)  # también se hashea al actualizar
-    usuario.estado = datos.estado
-    usuario.rol_id = datos.rol_id
+    if datos.nombre is not None:
+        existe = db.query(Usuario).filter(
+            Usuario.nombre == datos.nombre,
+            Usuario.id_usuario != id
+        ).first()
+        if existe:
+            raise HTTPException(status_code=400, detail="El nombre ya existe")
+
+        usuario.nombre = datos.nombre
+
+    if datos.pwsd is not None:
+        usuario.pwsd = hashear_password(datos.pwsd)
+
+    if datos.estado is not None:
+        usuario.estado = datos.estado
+
+    if datos.rol_id is not None:
+        usuario.rol_id = datos.rol_id
 
     db.commit()
     db.refresh(usuario)
     return usuario
 
 
-@router.delete("/{id}", status_code=204)
+@router.delete("/{id}", status_code=200)
 def eliminar_usuario(id: int, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.id_usuario == id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     db.delete(usuario)
     db.commit()
+    return {"detail": "Usuario eliminado"}
