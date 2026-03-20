@@ -8,3 +8,10 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()  # abre la sesión
+    try:
+        yield db          # la entrega al endpoint
+    finally:
+        db.close()   

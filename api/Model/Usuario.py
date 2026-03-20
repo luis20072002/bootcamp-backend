@@ -1,13 +1,13 @@
 
-import hashlib
-from sqlalchemy import Column, String, Integer,VARBINARY, Boolean, DateTime,ForeignKey
+from sqlalchemy import Column,Integer,VARBINARY, Boolean, DateTime,ForeignKey, String
 from database.database import Base
 from sqlalchemy.orm import relationship
 
 class Usuario(Base):
     __tablename__="usuario"
     id_usuario = Column(Integer,primary_key=True)
-    password = Column (VARBINARY(255), nullable=False)
+    nombre = Column(String(50), nullable=False)
+    pwsd = Column (String(255), nullable=False)
     estado = Column(Boolean,default=True, nullable=False)
     fecha_creacion = Column(DateTime, nullable=False)
     ultima_actividad =  Column(DateTime, nullable=False)
