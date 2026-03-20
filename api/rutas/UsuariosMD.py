@@ -3,11 +3,9 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext # instala passlib[bcrypt]
 
 
-
-from database.database import get_db # No tocar
-from model.Usuario import Usuario # Respeta ese orden, cambia el ultimo para cambiar de modelo
-from schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse # Respeta ese orden, ultimo para cambiar de schema
-
+from api.database.database import get_db
+from api.model.Usuario import Usuario
+from api.schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
 # Configuración del hash

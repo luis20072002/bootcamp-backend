@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer,Date,Time,ForeignKey
 from sqlalchemy.orm import relationship
-from database.database import Base
+from api.database.database import Base
 
 class Turno(Base):
     __tablename__= "turnos"

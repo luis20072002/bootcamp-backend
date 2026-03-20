@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer
-from database.database import Base
+from api.database.database import Base
 from sqlalchemy.orm import relationship
 class Aula(Base):
     __tablename__ = "aulas"
