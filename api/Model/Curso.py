@@ -13,8 +13,4 @@ class Curso(Base):
 
     docente = relationship("Docente", back_populates="cursos") 
     aula = relationship("Aula", back_populates="cursos")
-<<<<<<< HEAD
-    registros = relationship("Registro",back_populates="cursos")
-=======
     registros = relationship("Registro",back_populates="Cursos")
->>>>>>> luiapi

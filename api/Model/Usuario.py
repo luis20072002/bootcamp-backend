@@ -6,13 +6,8 @@ from sqlalchemy.orm import relationship
 class Usuario(Base):
     __tablename__="usuario"
     id_usuario = Column(Integer,primary_key=True)
-<<<<<<< HEAD
-    nombre = Column(String(50), nullable= False)
-    password = Column (String(8), nullable=False)
-=======
     nombre = Column(String(50), nullable=False)
     pwsd = Column (String(255), nullable=False)
->>>>>>> luiapi
     estado = Column(Boolean,default=True, nullable=False)
     fecha_creacion = Column(DateTime, nullable=False)
     ultima_actividad =  Column(DateTime, nullable=False)

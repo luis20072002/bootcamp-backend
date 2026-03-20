@@ -10,12 +10,5 @@ class Docente(Base):
     correo =  Column(String(100), nullable=False, unique=True)
     telefono =  Column(String(100), nullable=False)
    
-<<<<<<< HEAD
-   
-   
-    cursos = relationship("Curso",back_populates="docente")
-    registros = relationship("Registro",back_populates="docente")
-=======
 
 registros = relationship("Registro",back_populates="docentes")
->>>>>>> luiapi
