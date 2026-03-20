@@ -4,9 +4,9 @@ from passlib.context import CryptContext # instala passlib[bcrypt]
 
 
 
-from api.database.database import get_db # No tocar
-from api.Model.Usuario import Usuario # Respeta ese orden, cambia el ultimo para cambiar de modelo
-from api.schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse # Respeta ese orden, ultimo para cambiar de schema
+from database.database import get_db # No tocar
+from model.Usuario import Usuario # Respeta ese orden, cambia el ultimo para cambiar de modelo
+from schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse # Respeta ese orden, ultimo para cambiar de schema
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
