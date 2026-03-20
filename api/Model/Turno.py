@@ -14,7 +14,7 @@ class Turno(Base):
 
     id_usuario =  Column(Integer,ForeignKey("usuario.id_usuario"))
 
-    usuario = relationship("Usuario",back_populates="turnos")
+    usuarios = relationship("Usuario",back_populates="turnos")
     planillas = relationship("Planilla",back_populates="turno")
 
     registros= relationship("Registro",back_populates="turnos")

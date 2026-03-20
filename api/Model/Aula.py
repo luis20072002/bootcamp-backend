@@ -10,4 +10,4 @@ class Aula(Base):
     capacidad = Column(Integer, nullable=False)
 
     cursos = relationship("Curso", back_populates="aula")
-    registros = relationship("Registro",back_populates="aulas")
+    registros = relationship("Registro",back_populates="aula")

@@ -9,8 +9,8 @@ class Docente(Base):
     apellido = Column(String(100), nullable=False)
     correo =  Column(String(100), nullable=False, unique=True)
     telefono =  Column(String(100), nullable=False)
-    cursos = relationship("Curso",back_populates="docente")
-    
    
-
-registros = relationship("Registro",back_populates="docentes")
+   
+   
+    cursos = relationship("Curso",back_populates="docente")
+    registros = relationship("Registro",back_populates="docente")

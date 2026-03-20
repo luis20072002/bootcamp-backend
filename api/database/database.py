@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-
-DATABASE_URL = "mssql+pyodbc://talento:cartagena@nodossolutions.com:1435/SGS?driver=ODBC+Driver+17+for+SQL+Server"
+import pyodbc
+DATABASE_URL = "mssql+pyodbc://talento:cartagena@nodossolutions.com:1435/SGS?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"
 
 engine = create_engine(DATABASE_URL)
 

@@ -10,7 +10,7 @@ class Registro(Base):
     asistencia_docente = Column(Boolean, nullable=False)
     uso_medios_audiovisuales = Column(Boolean,nullable=False)
     solicitudes = Column(String(300), nullable=True)
-    novedades = Column((300), nullable=True)
+    novedades = Column(String(300), nullable=True)
     fecha_registro= Column(Date, nullable=False)
     hora_registro = Column(Time, nullable=False)
 
@@ -22,8 +22,8 @@ class Registro(Base):
 
 
     turnos = relationship("Turno",back_populates="registros")
-    aulas = relationship("Aula",back_populates="registros")
-    docentes = relationship("Docente",back_populates="registros")
+    aula = relationship("Aula",back_populates="registros")
+    docente = relationship("Docente",back_populates="registros")
     cursos = relationship("Curso",back_populates="registros")
     
     
