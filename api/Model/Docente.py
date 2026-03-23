@@ -11,4 +11,6 @@ class Docente(Base):
     telefono =  Column(String(100), nullable=False)
    
 
-registros = relationship("Registro",back_populates="docentes")
+   
+    cursos = relationship("Curso", back_populates="docente")    # 👈 agrega esta
+    registros = relationship("Registro", back_populates="docente")  # 👈 y esta

@@ -13,6 +13,7 @@ router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hashear_password(password: str) -> str:
+    password = password[:72]
     return pwd_context.hash(password)
 
 def verificar_password(password: str, hashed: str) -> bool:
@@ -46,6 +47,7 @@ def crear_usuario(datos: UsuarioCreate, db: Session = Depends(get_db)):
         estado=datos.estado,
         rol_id=datos.rol_id,
         fecha_creacion=datetime.now(),
+        ultima_actividad=datetime.now(),
     )
     db.add(nuevo_usuario)
     db.commit()

@@ -9,4 +9,4 @@ class Rol(Base):
     nombre = Column(String(50), nullable=False)
 
   
-    usuarios = relationship("Usuario",back_populates="roles")
+    usuarios = relationship("Usuario", back_populates="rol")
