@@ -11,7 +11,7 @@ class Usuario(Base):
     estado = Column(Boolean,default=True, nullable=False)
     fecha_creacion = Column(DateTime, nullable=False)
     ultima_actividad =  Column(DateTime, nullable=False)
-    rol_id = Column(Integer,ForeignKey("roles.rol_id"))
+    rol_id = Column(Integer,ForeignKey("ROL.rol_id"))
 
     rol = relationship("Rol",back_populates="usuarios")
     turnos = relationship("Turno",back_populates="usuarios")
