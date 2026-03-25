@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from database.database import get_db
-from model.Turno import Turno
-from model.Usuario import Usuario
-from schemas.Turno_SCH import TurnoCreate, TurnoResponse, TurnoUpdate
+from  api.database.database import get_db
+from  api.model.Turno import Turno
+from  api.model.Usuario import Usuario
+from  api.schemas.Turno_SCH import TurnoCreate, TurnoResponse, TurnoUpdate
 
 router = APIRouter(prefix="/turnos", tags=["Turnos"])
 

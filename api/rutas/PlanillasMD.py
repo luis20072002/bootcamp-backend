@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from database.database import get_db
-from model.Planilla import Planilla
-from model.Usuario import Usuario
-from model.Turno import Turno
-from schemas.Planilla_SCH import PlanillaCreate, PlanillaResponse
+from  api.database.database import get_db
+from  api.model.Planilla import Planilla
+from  api.model.Usuario import Usuario
+from  api.model.Turno import Turno
+from  api.schemas.Planilla_SCH import PlanillaCreate, PlanillaResponse
 
 router = APIRouter(prefix="/planillas", tags=["Planillas"])
 

@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from database.database import get_db
-from model.Horario import Horario
-from model.Usuario import Usuario
-from schemas.Horario_SCH import HorarioCreate, HorarioResponse
+from api.database.database import get_db
+from  api.model.Horario import Horario
+from  api.model.Usuario import Usuario
+from  api.schemas.Horario_SCH import HorarioCreate, HorarioResponse
 
 router = APIRouter(prefix="/horarios", tags=["Horarios"])
 
