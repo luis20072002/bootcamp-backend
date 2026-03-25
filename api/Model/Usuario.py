@@ -1,6 +1,6 @@
 
 from sqlalchemy import Column,Integer,VARBINARY, Boolean, DateTime,ForeignKey, String
-from api.database.database import Base
+from database.database import Base
 from sqlalchemy.orm import relationship
 
 class Usuario(Base):

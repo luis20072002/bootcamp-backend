@@ -1,59 +1,73 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from database.database import get_db
 from model.Docente import Docente
+from schemas.Docente_SCH import DocenteCreate, DocenteResponse
 
-docentes: list[dict] = [] #check
+router = APIRouter(prefix="/docentes", tags=["Docentes"])
 
-router=APIRouter(
-    prefix="/Docente",
-    tags=["Docente"]
-)
-#Deberia aparecer el telefono? no, Cambio para la base de datos
-# --- Docentes
 
-@router.post("/Docente")
-def add_docente(datos: Docente):
-    nuevo_docente={
-        "id" : Docente.id,
-        "nombre" : Docente.nombre,
-        "apellido" : Docente.apellido,
-        "correo" : Docente.correo,
-        }
-    docentes.append(nuevo_docente)
+@router.get("/", response_model=list[DocenteResponse])
+def get_docentes(db: Session = Depends(get_db)):
+    return db.query(Docente).all()
 
-@router.get("/Docente/{id}")
-def get_docente_by_id(id: int):
-    for docente in docentes:
-        if docente["id"] == id:
-            return docente
 
-    return {"error": "usuario no encontrado"}
-@router.put("/Docente/{id}")
-def update_docente_by_id (id:int, datos:Docente):
-    for Docente in docentes:
-        if Docente["id"]==id:
-            Docente["nombre"]= datos.nombre
-            Docente["apellido"]= datos.apellido
-            Docente["correo"]=datos.correo
+@router.get("/{id_docente}", response_model=DocenteResponse)
+def get_docente(id_docente: int, db: Session = Depends(get_db)):
+    docente = db.query(Docente).filter(Docente.id_docente == id_docente).first()
+    if not docente:
+        raise HTTPException(status_code=404, detail="Docente no encontrado")
+    return docente
 
-            return {"Mensaje: Docente actualizado"}
-    return {"error":"Docente not found"}
 
-@router.put("/Docente/{id}")
-def update_email(id: int, email: str):
+@router.post("/", response_model=DocenteResponse, status_code=201)
+def crear_docente(datos: DocenteCreate, db: Session = Depends(get_db)):
+    existe = db.query(Docente).filter(Docente.correo == datos.correo).first()
+    if existe:
+        raise HTTPException(status_code=400, detail="El correo ya está registrado")
 
-    for docente in docentes:
-        if docente["id"] == id:
-            docente["email"] = email
-            return {"mensaje": "email actualizado", "docente": docente}
+    nuevo_docente = Docente(
+        nombre=datos.nombre,
+        apellido=datos.apellido,
+        correo=datos.correo,
+        telefono=datos.telefono,
+    )
+    db.add(nuevo_docente)
+    db.commit()
+    db.refresh(nuevo_docente)
+    return nuevo_docente
 
-    return {"error": "docente no encontrado"}
 
-@router.delete("/Docente/{id}")
-def delete_docente_by_ID(id: int):
-      for i, registro in enumerate(docentes):
-        if registro["id"] == id:
-            docentes.pop(i)
-            return {"mensaje": "Docente eliminado"}
+@router.put("/{id_docente}", response_model=DocenteResponse)
+def actualizar_docente(id_docente: int, datos: DocenteCreate, db: Session = Depends(get_db)):
+    docente = db.query(Docente).filter(Docente.id_docente == id_docente).first()
+    if not docente:
+        raise HTTPException(status_code=404, detail="Docente no encontrado")
 
-        return {"error": "Docente no encontrado"}
+    # Verificar correo duplicado en otro docente
+    correo_existe = db.query(Docente).filter(
+        Docente.correo == datos.correo,
+        Docente.id_docente != id_docente
+    ).first()
+    if correo_existe:
+        raise HTTPException(status_code=400, detail="El correo ya está en uso")
 
+    docente.nombre = datos.nombre
+    docente.apellido = datos.apellido
+    docente.correo = datos.correo
+    docente.telefono = datos.telefono
+
+    db.commit()
+    db.refresh(docente)
+    return docente
+
+
+@router.delete("/{id_docente}", status_code=200)
+def eliminar_docente(id_docente: int, db: Session = Depends(get_db)):
+    docente = db.query(Docente).filter(Docente.id_docente == id_docente).first()
+    if not docente:
+        raise HTTPException(status_code=404, detail="Docente no encontrado")
+    db.delete(docente)
+    db.commit()
+    return {"detail": "Docente eliminado"}

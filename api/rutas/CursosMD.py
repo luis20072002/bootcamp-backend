@@ -1,66 +1,86 @@
-from fastapi import APIRouter
-from model.Curso import CursoCreate
-from rutas.DocentesMD import docentes
-from rutas.AulaMD import aulas
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
-router = APIRouter(
-    prefix="/Curso",
-    tags=["Curso"]
-)
-cursos: list[dict] = [] # check
+from database.database import get_db
+from model.Curso import Curso
+from model.Docente import Docente
+from model.Aula import Aula
+from schemas.Curso_SCH import CursoCreate, CursoResponse
 
-# --- Curso ---
+router = APIRouter(prefix="/cursos", tags=["Cursos"])
 
-@router.post("/")
-def crear_curso(datos: CursoCreate):
 
-    # Validar docente
-    if not any(docente["id"] == datos.id_docente for docente in docentes):
-        return {"error": "Docente no encontrado"}
+@router.get("/", response_model=list[CursoResponse])
+def get_cursos(db: Session = Depends(get_db)):
+    return db.query(Curso).all()
 
-    # Validar aula
-    if not any(aula["codigo"] == datos.codigo for aula in aulas):
-        return {"error": "Aula no encontrada"}
 
-    curso = {
-        "id": len(cursos),
-        "nombre": datos.nombre,
-        "codigo": datos.codigo,
-        "docente_id": datos.id_docente,
-        "estatus": datos.estatus
-    }
+@router.get("/{id_curso}", response_model=CursoResponse)
+def get_curso(id_curso: str, db: Session = Depends(get_db)):
+    curso = db.query(Curso).filter(Curso.id_curso == id_curso).first()
+    if not curso:
+        raise HTTPException(status_code=404, detail="Curso no encontrado")
+    return curso
 
-    cursos.append(curso)
 
-    return {"mensaje": "Curso registrado con éxito", "curso": curso}
-@router.get("/{id}")
-def get_Curso_by_id(id: int):
+@router.post("/", response_model=CursoResponse, status_code=201)
+def crear_curso(datos: CursoCreate, db: Session = Depends(get_db)):
+    # Validar existencia del docente
+    docente = db.query(Docente).filter(Docente.id_docente == datos.id_docente).first()
+    if not docente:
+        raise HTTPException(status_code=404, detail="Docente no encontrado")
 
-    for curso in cursos:
-        if curso["id"] == id:
-            return curso
+    # Validar existencia del aula
+    aula = db.query(Aula).filter(Aula.id_aula == datos.id_aula).first()
+    if not aula:
+        raise HTTPException(status_code=404, detail="Aula no encontrada")
 
-    return {"error": "Curso no encontrado"}
+    existe = db.query(Curso).filter(Curso.id_curso == datos.id_curso).first()
+    if existe:
+        raise HTTPException(status_code=400, detail="El id de curso ya existe")
 
-@router.put("/{id}")
-def actualizar_docente_curso(id: int, docente_id: int):
+    nuevo_curso = Curso(
+        id_curso=datos.id_curso,
+        nombre_curso=datos.nombre_curso,
+        codigo_curso=datos.codigo_curso,
+        id_docente=datos.id_docente,
+        id_aula=datos.id_aula,
+    )
+    db.add(nuevo_curso)
+    db.commit()
+    db.refresh(nuevo_curso)
+    return nuevo_curso
 
-    if not any(docente["id"] == docente_id for docente in docentes):
-        return {"error": "Docente no encontrado"}
 
-    for curso in cursos:
-        if curso["id"] == id:
-            curso["docente_id"] = docente_id
-            return {"mensaje": "docente actualizado", "curso": curso}
+@router.put("/{id_curso}", response_model=CursoResponse)
+def actualizar_curso(id_curso: str, datos: CursoCreate, db: Session = Depends(get_db)):
+    curso = db.query(Curso).filter(Curso.id_curso == id_curso).first()
+    if not curso:
+        raise HTTPException(status_code=404, detail="Curso no encontrado")
 
-    return {"error": "curso no encontrado"}
+    docente = db.query(Docente).filter(Docente.id_docente == datos.id_docente).first()
+    if not docente:
+        raise HTTPException(status_code=404, detail="Docente no encontrado")
 
-@router.delete("/{id}")
-def eliminar_curso(id: int):
+    aula = db.query(Aula).filter(Aula.id_aula == datos.id_aula).first()
+    if not aula:
+        raise HTTPException(status_code=404, detail="Aula no encontrada")
 
-    for i, curso in enumerate(cursos):
-        if curso["id"] == id:
-            cursos.pop(i)
-            return {"mensaje": "curso eliminado"}
+    curso.nombre_curso = datos.nombre_curso
+    curso.codigo_curso = datos.codigo_curso
+    curso.id_docente = datos.id_docente
+    curso.id_aula = datos.id_aula
 
-    return {"error": "curso no encontrado"}
+    db.commit()
+    db.refresh(curso)
+    return curso
+
+
+@router.delete("/{id_curso}", status_code=200)
+def eliminar_curso(id_curso: str, db: Session = Depends(get_db)):
+    curso = db.query(Curso).filter(Curso.id_curso == id_curso).first()
+    if not curso:
+        raise HTTPException(status_code=404, detail="Curso no encontrado")
+    db.delete(curso)
+    db.commit()
+    return {"detail": "Curso eliminado"}

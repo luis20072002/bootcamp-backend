@@ -1,17 +1,15 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, datetime
 
 class PlanillaCreate(BaseModel):
-
-    id_usuario : int
-    id_turno : int
-    fecha_asignacion : date
-    
-
-
+    id_usuario: int
+    id_turno: int
+    fecha_asignacion: date
 
 class PlanillaResponse(BaseModel):
-    id: int
-    class Config:
-        from_attributes = True
-    
+    id_planilla: int
+    id_usuario: int
+    id_turno: int
+    fecha_asignacion: datetime
+
+    model_config = {"from_attributes": True}

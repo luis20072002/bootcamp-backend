@@ -1,75 +1,64 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
-from fastapi import APIRouter
+from database.database import get_db
 from model.Aula import Aula
+from schemas.Aula_SCH import AulaCreate, AulaResponse
+
+router = APIRouter(prefix="/aulas", tags=["Aulas"])
 
 
-aula: list[dict] = [] #check
-
-router = APIRouter(
-    prefix="/Aula",
-    tags=["Aula"]
-)
-
-# --- AULA ---
-
-@router.post("/aula")
-def subiraula(datos: Aula):
-
-    for registro in aula:
-        if registro["codigo"] == datos.codigo:
-            return {"error": "el codigo ya existe"}
-
-    nueva_aula = {
-        "id": len(aula),
-        "codigo": datos.codigo,
-        "nombre": datos.nombre if datos.nombre else datos.codigo,
-        "edificio": datos.edificio,
-        "capacidad": datos.capacidad
-    }
-
-    aula.append(nueva_aula)
-
-    return {"mensaje": "aula creada", "aula": nueva_aula}
+@router.get("/", response_model=list[AulaResponse])
+def get_aulas(db: Session = Depends(get_db)):
+    return db.query(Aula).all()
 
 
-@router.get("/aula/{id}")
-def get_aula_by_id(id: int):
-
-    for registro in aula:
-        if registro["id"] == id:
-            return registro
-
-    return {"error": "aula no encontrada"}
+@router.get("/{id_aula}", response_model=AulaResponse)
+def get_aula(id_aula: str, db: Session = Depends(get_db)):
+    aula = db.query(Aula).filter(Aula.id_aula == id_aula).first()
+    if not aula:
+        raise HTTPException(status_code=404, detail="Aula no encontrada")
+    return aula
 
 
-@router.put("/aula/{id}")
-def actualizaraula(id: int, datos: Aula):
+@router.post("/", response_model=AulaResponse, status_code=201)
+def crear_aula(datos: AulaCreate, db: Session = Depends(get_db)):
+    existe = db.query(Aula).filter(Aula.id_aula == datos.id_aula).first()
+    if existe:
+        raise HTTPException(status_code=400, detail="El id de aula ya existe")
 
-    for registro in aula:
-        if registro["id"] == id:
-            registro["codigo"] = datos.codigo
-            registro["nombre"] = datos.nombre if datos.nombre else datos.codigo
-            registro["edificio"] = datos.edificio
-            registro["capacidad"] = datos.capacidad
+    nueva_aula = Aula(
+        id_aula=datos.id_aula,
+        nombre_aula=datos.nombre_aula,
+        edificio=datos.edificio,
+        capacidad=datos.capacidad,
+    )
+    db.add(nueva_aula)
+    db.commit()
+    db.refresh(nueva_aula)
+    return nueva_aula
 
-            return {"mensaje": "aula actualizada", "aula": registro}
 
-    return {"error": "aula no encontrada"}
-#endpoint para buscar por aula:
-@router.get("/aula/codigo/{codigo}")
-def get_aula_by_codigo(codigo: str):
+@router.put("/{id_aula}", response_model=AulaResponse)
+def actualizar_aula(id_aula: str, datos: AulaCreate, db: Session = Depends(get_db)):
+    aula = db.query(Aula).filter(Aula.id_aula == id_aula).first()
+    if not aula:
+        raise HTTPException(status_code=404, detail="Aula no encontrada")
 
-    for registro in aula:
-        if registro["codigo"] == codigo:
-            return registro
+    aula.nombre_aula = datos.nombre_aula
+    aula.edificio = datos.edificio
+    aula.capacidad = datos.capacidad
 
-    return {"error": "aula no encontrada"}
-@router.delete("/aula/{id}")
-def eliminaraula(id: int):
+    db.commit()
+    db.refresh(aula)
+    return aula
 
-    for i, registro in enumerate(aula):
-        if registro["id"] == id:
-            aula.pop(i)
-            return {"mensaje": "aula eliminada con id: " + str(id)}
 
-    return {"error": "aula no encontrada"}
+@router.delete("/{id_aula}", status_code=200)
+def eliminar_aula(id_aula: str, db: Session = Depends(get_db)):
+    aula = db.query(Aula).filter(Aula.id_aula == id_aula).first()
+    if not aula:
+        raise HTTPException(status_code=404, detail="Aula no encontrada")
+    db.delete(aula)
+    db.commit()
+    return {"detail": "Aula eliminada"}

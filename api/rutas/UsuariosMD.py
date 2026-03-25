@@ -4,9 +4,9 @@ from passlib.context import CryptContext # instala passlib[bcrypt]
 from datetime import datetime
 
 
-from api.database.database import get_db
-from api.model.Usuario import Usuario
-from api.schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse , UsuarioUpdate
+from database.database import get_db
+from model.Usuario import Usuario
+from schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse , UsuarioUpdate
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
 # Configuración del hash

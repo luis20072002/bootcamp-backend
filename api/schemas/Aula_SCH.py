@@ -1,12 +1,15 @@
 from pydantic import BaseModel
 
 class AulaCreate(BaseModel):
-    id: int
-    nombre_aula : str
-    edificio : str
-    capacidad : int
+    id_aula: str
+    nombre_aula: str
+    edificio: str
+    capacidad: int
 
-class AulaResponse(AulaCreate):
-    id: int
-    class Config:
-        from_attributes = True
+class AulaResponse(BaseModel):
+    id_aula: str
+    nombre_aula: str | None
+    edificio: str
+    capacidad: int
+
+    model_config = {"from_attributes": True}

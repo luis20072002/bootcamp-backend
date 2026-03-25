@@ -1,15 +1,22 @@
 from pydantic import BaseModel
 from datetime import date, time
-class TurnoCreate(BaseModel):
 
-    id_usuario : int
-    fecha : date
+class TurnoCreate(BaseModel):
+    id_usuario: int
+    fecha: date
     hora_inicio: time
-    hora_fin : time
-    estado_turno : str
+    hora_fin: time
+    estado_turno: str
 
 class TurnoResponse(BaseModel):
-    id : int
+    id_turno: int
+    id_usuario: int
+    fecha_turno: date
+    hora_inicio: time
+    hora_fin: time
+    estado_turno: str
 
-class  TurnoUpdate (BaseModel):
-    estado_turno : str
+    model_config = {"from_attributes": True}
+
+class TurnoUpdate(BaseModel):
+    estado_turno: str
