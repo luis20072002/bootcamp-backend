@@ -14,6 +14,5 @@ class Usuario(Base):
     rol_id = Column(Integer,ForeignKey("ROL.rol_id"))
 
     rol = relationship("Rol",back_populates="usuarios")
-    turnos = relationship("Turno",back_populates="usuarios")
     planillas = relationship("Planilla",back_populates="usuario")
     horario = relationship("Horario",back_populates="usuario")

@@ -7,14 +7,13 @@ class Turno(Base):
 
     id_turno = Column(Integer, primary_key=True)
     
-    fecha_turno = Column(Date, nullable=False)
+    turno = Column(Date, nullable=False)
     hora_inicio = Column(Time, nullable=False)
     hora_fin = Column(Time, nullable=False)
     estado_turno = Column(String(40), nullable=False )
 
     id_usuario =  Column(Integer,ForeignKey("usuario.id_usuario"))
 
-    usuarios = relationship("Usuario",back_populates="turnos")
     planillas = relationship("Planilla",back_populates="turno")
 
     registros= relationship("Registro",back_populates="turnos")
