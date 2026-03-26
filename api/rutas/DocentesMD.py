@@ -1,20 +1,29 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from database.database import get_db
-from model.Docente import Docente
-from schemas.Docente_SCH import DocenteCreate, DocenteResponse
+from api.database.database import get_db
+from api.model.Docente import Docente
+from api.model.Usuario import Usuario
+from api.schemas.Docente_SCH import DocenteCreate, DocenteResponse
+from api.auth.dependencies import solo_admin, admin_o_auxiliar
 
 router = APIRouter(prefix="/docentes", tags=["Docentes"])
 
 
 @router.get("/", response_model=list[DocenteResponse])
-def get_docentes(db: Session = Depends(get_db)):
+def get_docentes(
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(admin_o_auxiliar)
+):
     return db.query(Docente).all()
 
 
 @router.get("/{id_docente}", response_model=DocenteResponse)
-def get_docente(id_docente: int, db: Session = Depends(get_db)):
+def get_docente(
+    id_docente: int,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(admin_o_auxiliar)
+):
     docente = db.query(Docente).filter(Docente.id_docente == id_docente).first()
     if not docente:
         raise HTTPException(status_code=404, detail="Docente no encontrado")
@@ -22,7 +31,11 @@ def get_docente(id_docente: int, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=DocenteResponse, status_code=201)
-def crear_docente(datos: DocenteCreate, db: Session = Depends(get_db)):
+def crear_docente(
+    datos: DocenteCreate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     existe = db.query(Docente).filter(Docente.correo == datos.correo).first()
     if existe:
         raise HTTPException(status_code=400, detail="El correo ya está registrado")
@@ -40,12 +53,16 @@ def crear_docente(datos: DocenteCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{id_docente}", response_model=DocenteResponse)
-def actualizar_docente(id_docente: int, datos: DocenteCreate, db: Session = Depends(get_db)):
+def actualizar_docente(
+    id_docente: int,
+    datos: DocenteCreate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     docente = db.query(Docente).filter(Docente.id_docente == id_docente).first()
     if not docente:
         raise HTTPException(status_code=404, detail="Docente no encontrado")
 
-    # Verificar correo duplicado en otro docente
     correo_existe = db.query(Docente).filter(
         Docente.correo == datos.correo,
         Docente.id_docente != id_docente
@@ -64,7 +81,11 @@ def actualizar_docente(id_docente: int, datos: DocenteCreate, db: Session = Depe
 
 
 @router.delete("/{id_docente}", status_code=200)
-def eliminar_docente(id_docente: int, db: Session = Depends(get_db)):
+def eliminar_docente(
+    id_docente: int,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     docente = db.query(Docente).filter(Docente.id_docente == id_docente).first()
     if not docente:
         raise HTTPException(status_code=404, detail="Docente no encontrado")

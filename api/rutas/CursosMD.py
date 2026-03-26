@@ -1,22 +1,31 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from database.database import get_db
-from model.Curso import Curso
-from model.Docente import Docente
-from model.Aula import Aula
-from schemas.Curso_SCH import CursoCreate, CursoResponse
+from api.database.database import get_db
+from api.model.Curso import Curso
+from api.model.Docente import Docente
+from api.model.Aula import Aula
+from api.model.Usuario import Usuario
+from api.schemas.Curso_SCH import CursoCreate, CursoResponse
+from api.auth.dependencies import solo_admin, admin_o_auxiliar
 
 router = APIRouter(prefix="/cursos", tags=["Cursos"])
 
 
 @router.get("/", response_model=list[CursoResponse])
-def get_cursos(db: Session = Depends(get_db)):
+def get_cursos(
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(admin_o_auxiliar)
+):
     return db.query(Curso).all()
 
 
 @router.get("/{id_curso}", response_model=CursoResponse)
-def get_curso(id_curso: str, db: Session = Depends(get_db)):
+def get_curso(
+    id_curso: str,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(admin_o_auxiliar)
+):
     curso = db.query(Curso).filter(Curso.id_curso == id_curso).first()
     if not curso:
         raise HTTPException(status_code=404, detail="Curso no encontrado")
@@ -24,13 +33,15 @@ def get_curso(id_curso: str, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=CursoResponse, status_code=201)
-def crear_curso(datos: CursoCreate, db: Session = Depends(get_db)):
-    # Validar existencia del docente
+def crear_curso(
+    datos: CursoCreate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     docente = db.query(Docente).filter(Docente.id_docente == datos.id_docente).first()
     if not docente:
         raise HTTPException(status_code=404, detail="Docente no encontrado")
 
-    # Validar existencia del aula
     aula = db.query(Aula).filter(Aula.id_aula == datos.id_aula).first()
     if not aula:
         raise HTTPException(status_code=404, detail="Aula no encontrada")
@@ -53,7 +64,12 @@ def crear_curso(datos: CursoCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{id_curso}", response_model=CursoResponse)
-def actualizar_curso(id_curso: str, datos: CursoCreate, db: Session = Depends(get_db)):
+def actualizar_curso(
+    id_curso: str,
+    datos: CursoCreate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     curso = db.query(Curso).filter(Curso.id_curso == id_curso).first()
     if not curso:
         raise HTTPException(status_code=404, detail="Curso no encontrado")
@@ -77,7 +93,11 @@ def actualizar_curso(id_curso: str, datos: CursoCreate, db: Session = Depends(ge
 
 
 @router.delete("/{id_curso}", status_code=200)
-def eliminar_curso(id_curso: str, db: Session = Depends(get_db)):
+def eliminar_curso(
+    id_curso: str,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     curso = db.query(Curso).filter(Curso.id_curso == id_curso).first()
     if not curso:
         raise HTTPException(status_code=404, detail="Curso no encontrado")

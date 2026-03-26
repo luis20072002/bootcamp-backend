@@ -1,37 +1,57 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from database.database import get_db
-from model.Turno import Turno
-from model.Usuario import Usuario
-from schemas.Turno_SCH import TurnoCreate, TurnoResponse, TurnoUpdate
+from api.database.database import get_db
+from api.model.Turno import Turno
+from api.model.Usuario import Usuario
+from api.schemas.Turno_SCH import TurnoCreate, TurnoResponse, TurnoUpdate
+from api.auth.dependencies import solo_admin, admin_o_auxiliar, ROL_AUXILIAR
 
 router = APIRouter(prefix="/turnos", tags=["Turnos"])
 
 
 @router.get("/", response_model=list[TurnoResponse])
-def get_turnos(db: Session = Depends(get_db)):
+def get_turnos(
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     return db.query(Turno).all()
 
 
+@router.get("/usuario/{id_usuario}", response_model=list[TurnoResponse])
+def get_turnos_por_usuario(
+    id_usuario: int,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(admin_o_auxiliar)
+):
+    if current_user.rol_id == ROL_AUXILIAR and current_user.id_usuario != id_usuario:
+        raise HTTPException(status_code=403, detail="Solo puedes ver tus propios turnos")
+
+    usuario = db.query(Usuario).filter(Usuario.id_usuario == id_usuario).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    return db.query(Turno).filter(Turno.id_usuario == id_usuario).all()
+
+
 @router.get("/{id_turno}", response_model=TurnoResponse)
-def get_turno(id_turno: int, db: Session = Depends(get_db)):
+def get_turno(
+    id_turno: int,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(admin_o_auxiliar)
+):
     turno = db.query(Turno).filter(Turno.id_turno == id_turno).first()
     if not turno:
         raise HTTPException(status_code=404, detail="Turno no encontrado")
     return turno
 
 
-@router.get("/usuario/{id_usuario}", response_model=list[TurnoResponse])
-def get_turnos_por_usuario(id_usuario: int, db: Session = Depends(get_db)):
-    usuario = db.query(Usuario).filter(Usuario.id_usuario == id_usuario).first()
-    if not usuario:
-        raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    return db.query(Turno).filter(Turno.id_usuario == id_usuario).all()
-
-
 @router.post("/", response_model=TurnoResponse, status_code=201)
-def crear_turno(datos: TurnoCreate, db: Session = Depends(get_db)):
+def crear_turno(
+    datos: TurnoCreate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     usuario = db.query(Usuario).filter(Usuario.id_usuario == datos.id_usuario).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -50,10 +70,18 @@ def crear_turno(datos: TurnoCreate, db: Session = Depends(get_db)):
 
 
 @router.patch("/{id_turno}", response_model=TurnoResponse)
-def actualizar_estado_turno(id_turno: int, datos: TurnoUpdate, db: Session = Depends(get_db)):
+def actualizar_estado_turno(
+    id_turno: int,
+    datos: TurnoUpdate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(admin_o_auxiliar)
+):
     turno = db.query(Turno).filter(Turno.id_turno == id_turno).first()
     if not turno:
         raise HTTPException(status_code=404, detail="Turno no encontrado")
+
+    if current_user.rol_id == ROL_AUXILIAR and turno.id_usuario != current_user.id_usuario:
+        raise HTTPException(status_code=403, detail="No puedes modificar el turno de otro usuario")
 
     turno.estado_turno = datos.estado_turno
     db.commit()
@@ -62,7 +90,11 @@ def actualizar_estado_turno(id_turno: int, datos: TurnoUpdate, db: Session = Dep
 
 
 @router.delete("/{id_turno}", status_code=200)
-def eliminar_turno(id_turno: int, db: Session = Depends(get_db)):
+def eliminar_turno(
+    id_turno: int,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     turno = db.query(Turno).filter(Turno.id_turno == id_turno).first()
     if not turno:
         raise HTTPException(status_code=404, detail="Turno no encontrado")

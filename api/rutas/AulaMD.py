@@ -1,20 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from database.database import get_db
-from model.Aula import Aula
-from schemas.Aula_SCH import AulaCreate, AulaResponse
-
+from api.database.database import get_db
+from api.model.Aula import Aula
+from api.schemas.Aula_SCH import AulaCreate, AulaResponse
+from api.auth.dependencies import solo_admin, admin_o_auxiliar
 router = APIRouter(prefix="/aulas", tags=["Aulas"])
 
 
 @router.get("/", response_model=list[AulaResponse])
-def get_aulas(db: Session = Depends(get_db)):
+def get_aulas(db=Depends(get_db), current_user=Depends(admin_o_auxiliar)):
     return db.query(Aula).all()
 
 
 @router.get("/{id_aula}", response_model=AulaResponse)
-def get_aula(id_aula: str, db: Session = Depends(get_db)):
+def get_aula(id_aula: str, db: Session = Depends(get_db), current_user=Depends(admin_o_auxiliar)):
     aula = db.query(Aula).filter(Aula.id_aula == id_aula).first()
     if not aula:
         raise HTTPException(status_code=404, detail="Aula no encontrada")
@@ -22,7 +22,7 @@ def get_aula(id_aula: str, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=AulaResponse, status_code=201)
-def crear_aula(datos: AulaCreate, db: Session = Depends(get_db)):
+def crear_aula(datos: AulaCreate, db: Session = Depends(get_db), current_user=Depends(solo_admin)):
     existe = db.query(Aula).filter(Aula.id_aula == datos.id_aula).first()
     if existe:
         raise HTTPException(status_code=400, detail="El id de aula ya existe")
@@ -40,7 +40,7 @@ def crear_aula(datos: AulaCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{id_aula}", response_model=AulaResponse)
-def actualizar_aula(id_aula: str, datos: AulaCreate, db: Session = Depends(get_db)):
+def actualizar_aula(id_aula: str, datos: AulaCreate, db: Session = Depends(get_db), current_user=Depends(solo_admin)):
     aula = db.query(Aula).filter(Aula.id_aula == id_aula).first()
     if not aula:
         raise HTTPException(status_code=404, detail="Aula no encontrada")
@@ -53,9 +53,8 @@ def actualizar_aula(id_aula: str, datos: AulaCreate, db: Session = Depends(get_d
     db.refresh(aula)
     return aula
 
-
 @router.delete("/{id_aula}", status_code=200)
-def eliminar_aula(id_aula: str, db: Session = Depends(get_db)):
+def eliminar_aula(id_aula: str, db: Session = Depends(get_db), current_user=Depends(solo_admin)):
     aula = db.query(Aula).filter(Aula.id_aula == id_aula).first()
     if not aula:
         raise HTTPException(status_code=404, detail="Aula no encontrada")

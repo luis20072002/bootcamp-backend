@@ -1,20 +1,27 @@
-from fastapi import APIRouter, HTTPException
-from api.core.security import create_access_token
-from api.database.database import get_db
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordRequestForm
 
-router = APIRouter(prefix="/auth")
+from api.database.database import get_db
+from api.model.Usuario import Usuario
+from api.rutas.UsuariosMD import verificar_password
+from api.auth.auth import crear_token
+
+router = APIRouter(prefix="/auth", tags=["Auth"])
+
 
 @router.post("/login")
-def login(username: str, password: str):
-    db=get_db()
-    user = db.query(Usuario).filter(Usuario.username == username).first()
+def login(
+    form: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
+    usuario = db.query(Usuario).filter(Usuario.nombre == form.username).first()
 
-    if not user:
-        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+    if not usuario or not verificar_password(form.password, usuario.pwsd):
+        raise HTTPException(status_code=401, detail="Credenciales incorrectas")
 
-    if not pwd_context.verify(password, user.password):
-        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+    if not usuario.estado:
+        raise HTTPException(status_code=403, detail="Usuario inactivo")
 
-    token = create_access_token({"sub": user.id})
-
+    token = crear_token({"sub": str(usuario.id_usuario), "rol": usuario.rol_id})
     return {"access_token": token, "token_type": "bearer"}

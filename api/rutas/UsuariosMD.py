@@ -7,6 +7,9 @@ from datetime import datetime
 from api.database.database import get_db
 from api.model.Usuario import Usuario
 from api.schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse , UsuarioUpdate
+
+from api.auth.dependencies import get_current_user, solo_admin
+
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
 # Configuración del hash
@@ -19,22 +22,26 @@ def hashear_password(password: str) -> str:
 def verificar_password(password: str, hashed: str) -> bool:
     return pwd_context.verify(password, hashed)
 
+@router.get("/me", response_model=UsuarioResponse)
+def get_mi_perfil(
+    current_user: Usuario = Depends(get_current_user)  # cualquier autenticado
+):
+    return current_user
 
 @router.get("/", response_model=list[UsuarioResponse])
-def get_usuarios(db: Session = Depends(get_db)):
+def get_usuarios(db: Session = Depends(get_db), current_user: Usuario = Depends(solo_admin)):
     return db.query(Usuario).all()
 
 
 @router.get("/{id}", response_model=UsuarioResponse)
-def get_usuario(id: int, db: Session = Depends(get_db)):
+def get_usuario(id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(solo_admin)):
     usuario = db.query(Usuario).filter(Usuario.id_usuario == id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return usuario
 
-
 @router.post("/", response_model=UsuarioResponse, status_code=201)
-def crear_usuario(datos: UsuarioCreate, db: Session = Depends(get_db)):
+def crear_usuario(datos: UsuarioCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(solo_admin)):
     # Verificar si el nombre ya existe
     existe = db.query(Usuario).filter(Usuario.nombre == datos.nombre).first()
     if existe:
@@ -56,7 +63,12 @@ def crear_usuario(datos: UsuarioCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{id}", response_model=UsuarioResponse)
-def actualizar_usuario(id: int, datos: UsuarioUpdate, db: Session = Depends(get_db)):
+def actualizar_usuario(
+    id: int,
+    datos: UsuarioUpdate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     usuario = db.query(Usuario).filter(Usuario.id_usuario == id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -68,7 +80,6 @@ def actualizar_usuario(id: int, datos: UsuarioUpdate, db: Session = Depends(get_
         ).first()
         if existe:
             raise HTTPException(status_code=400, detail="El nombre ya existe")
-
         usuario.nombre = datos.nombre
 
     if datos.pwsd is not None:
@@ -86,7 +97,7 @@ def actualizar_usuario(id: int, datos: UsuarioUpdate, db: Session = Depends(get_
 
 
 @router.delete("/{id}", status_code=200)
-def eliminar_usuario(id: int, db: Session = Depends(get_db)):
+def eliminar_usuario(id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(solo_admin)):
     usuario = db.query(Usuario).filter(Usuario.id_usuario == id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")

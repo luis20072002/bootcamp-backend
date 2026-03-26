@@ -1,37 +1,57 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from database.database import get_db
-from model.Horario import Horario
-from model.Usuario import Usuario
-from schemas.Horario_SCH import HorarioCreate, HorarioResponse
+from api.database.database import get_db
+from api.model.Horario import Horario
+from api.model.Usuario import Usuario
+from api.schemas.Horario_SCH import HorarioCreate, HorarioResponse
+from api.auth.dependencies import solo_admin, admin_o_auxiliar, ROL_AUXILIAR
 
 router = APIRouter(prefix="/horarios", tags=["Horarios"])
 
 
 @router.get("/", response_model=list[HorarioResponse])
-def get_horarios(db: Session = Depends(get_db)):
+def get_horarios(
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     return db.query(Horario).all()
 
 
+@router.get("/usuario/{id_usuario}", response_model=list[HorarioResponse])
+def get_horarios_por_usuario(
+    id_usuario: int,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(admin_o_auxiliar)
+):
+    if current_user.rol_id == ROL_AUXILIAR and current_user.id_usuario != id_usuario:
+        raise HTTPException(status_code=403, detail="Solo puedes ver tus propios horarios")
+
+    usuario = db.query(Usuario).filter(Usuario.id_usuario == id_usuario).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    return db.query(Horario).filter(Horario.id_usuario == id_usuario).all()
+
+
 @router.get("/{id_horario}", response_model=HorarioResponse)
-def get_horario(id_horario: int, db: Session = Depends(get_db)):
+def get_horario(
+    id_horario: int,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     horario = db.query(Horario).filter(Horario.id_horario == id_horario).first()
     if not horario:
         raise HTTPException(status_code=404, detail="Horario no encontrado")
     return horario
 
 
-@router.get("/usuario/{id_usuario}", response_model=list[HorarioResponse])
-def get_horarios_por_usuario(id_usuario: int, db: Session = Depends(get_db)):
-    usuario = db.query(Usuario).filter(Usuario.id_usuario == id_usuario).first()
-    if not usuario:
-        raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    return db.query(Horario).filter(Horario.id_usuario == id_usuario).all()
-
-
 @router.post("/", response_model=HorarioResponse, status_code=201)
-def crear_horario(datos: HorarioCreate, db: Session = Depends(get_db)):
+def crear_horario(
+    datos: HorarioCreate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     usuario = db.query(Usuario).filter(Usuario.id_usuario == datos.id_usuario).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -49,7 +69,12 @@ def crear_horario(datos: HorarioCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{id_horario}", response_model=HorarioResponse)
-def actualizar_horario(id_horario: int, datos: HorarioCreate, db: Session = Depends(get_db)):
+def actualizar_horario(
+    id_horario: int,
+    datos: HorarioCreate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     horario = db.query(Horario).filter(Horario.id_horario == id_horario).first()
     if not horario:
         raise HTTPException(status_code=404, detail="Horario no encontrado")
@@ -69,7 +94,11 @@ def actualizar_horario(id_horario: int, datos: HorarioCreate, db: Session = Depe
 
 
 @router.delete("/{id_horario}", status_code=200)
-def eliminar_horario(id_horario: int, db: Session = Depends(get_db)):
+def eliminar_horario(
+    id_horario: int,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
     horario = db.query(Horario).filter(Horario.id_horario == id_horario).first()
     if not horario:
         raise HTTPException(status_code=404, detail="Horario no encontrado")
