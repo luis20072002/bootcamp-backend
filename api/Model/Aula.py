@@ -5,7 +5,7 @@ class Aula(Base):
     __tablename__ = "aulas"
 
     id_aula = Column(String(10), primary_key=True, index=True)
-    nombre = Column(String(100), nullable=True)
+    nombre_aula = Column(String(100), nullable=True)
     edificio = Column(String(100), nullable=False)
     capacidad = Column(Integer, nullable=False)
 
