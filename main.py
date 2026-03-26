@@ -10,7 +10,7 @@ from api.rutas.CursosMD import router as router_Cursos
 from api.rutas.HorarioMD import router as router_Horarios
 from api.rutas.PlanillasMD import router as router_Planillas
 from api.rutas.RegistroMD import router as router_Registros
-from api.rutas.AuthMD import router as router_Auth
+from api.rutas.authMD import router as router_Auth
 import api.model as model
 
 app = FastAPI(title="SGS API", version="1.0.0")
