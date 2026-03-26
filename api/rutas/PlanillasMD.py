@@ -36,13 +36,13 @@ def get_planillas_por_usuario(
     return db.query(Planilla).filter(Planilla.id_usuario == id_usuario).all()
 
 
-@router.get("/{id_planilla}", response_model=PlanillaResponse)
+@router.get("/{id_planillas}", response_model=PlanillaResponse)
 def get_planilla(
-    id_planilla: int,
+    id_planillas: int,
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(solo_admin)
 ):
-    planilla = db.query(Planilla).filter(Planilla.id_planilla == id_planilla).first()
+    planilla = db.query(Planilla).filter(Planilla.id_planillas == id_planillas).first()
     if not planilla:
         raise HTTPException(status_code=404, detail="Planilla no encontrada")
     return planilla
@@ -73,13 +73,13 @@ def crear_planilla(
     return nueva_planilla
 
 
-@router.delete("/{id_planilla}", status_code=200)
+@router.delete("/{id_planillas}", status_code=200)
 def eliminar_planilla(
-    id_planilla: int,
+    id_planillas: int,
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(solo_admin)
 ):
-    planilla = db.query(Planilla).filter(Planilla.id_planilla == id_planilla).first()
+    planilla = db.query(Planilla).filter(Planilla.id_planillas == id_planillas).first()
     if not planilla:
         raise HTTPException(status_code=404, detail="Planilla no encontrada")
     db.delete(planilla)

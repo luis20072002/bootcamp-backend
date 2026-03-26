@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 
 class Planilla(Base):
     __tablename__="planilla_trabajo"
-    id_planilla = Column(Integer,primary_key=True)
+    id_planillas = Column(Integer,primary_key=True)
     fecha_asignacion = Column(DateTime, nullable=False)
  
     id_usuario = Column(Integer,ForeignKey("usuario.id_usuario"))

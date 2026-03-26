@@ -53,7 +53,7 @@ def crear_curso(
     nuevo_curso = Curso(
         id_curso=datos.id_curso,
         nombre_curso=datos.nombre_curso,
-        codigo_curso=datos.codigo_curso,
+        codi_curso=datos.codi_curso,
         id_docente=datos.id_docente,
         id_aula=datos.id_aula,
     )
@@ -83,7 +83,7 @@ def actualizar_curso(
         raise HTTPException(status_code=404, detail="Aula no encontrada")
 
     curso.nombre_curso = datos.nombre_curso
-    curso.codigo_curso = datos.codigo_curso
+    curso.codi_curso = datos.codi_curso
     curso.id_docente = datos.id_docente
     curso.id_aula = datos.id_aula
 

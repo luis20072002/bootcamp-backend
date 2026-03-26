@@ -7,7 +7,7 @@ class PlanillaCreate(BaseModel):
     fecha_asignacion: date
 
 class PlanillaResponse(BaseModel):
-    id_planilla: int
+    id_planillas: int
     id_usuario: int
     id_turno: int
     fecha_asignacion: datetime
