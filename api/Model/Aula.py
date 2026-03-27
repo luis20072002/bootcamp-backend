@@ -6,7 +6,7 @@ class Aula(Base):
 
     id_aula = Column(String(10), primary_key=True, index=True)
     codigo = Column (String(10),nullable=False )
-    nombre = Column(String(100), nullable=True)
+    nombre_aula = Column(String(100), nullable=True)
     edificio = Column(String(100), nullable=False)
     capacidad = Column(Integer, nullable=False)
 

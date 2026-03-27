@@ -5,7 +5,7 @@ PATRON_AULA = re.compile(r'^A[1-9]-[1-9](0[1-9]|1[0-9]|20)$')
 
 class AulaCreate(BaseModel):
     codigo: str
-    nombre: str | None = None
+    nombre_aula: str | None = None
     edificio: str
     capacidad: int
 
@@ -22,7 +22,7 @@ class AulaCreate(BaseModel):
 class AulaResponse(BaseModel):
     id_aula: int
     codigo: str
-    nombre: str | None
+    nombre_aula: str | None
     edificio: str
     capacidad: int
 

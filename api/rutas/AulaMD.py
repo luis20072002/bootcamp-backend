@@ -38,7 +38,7 @@ def crear_aula(datos: AulaCreate, db: Session = Depends(get_db), current_user=De
 
     nueva_aula = Aula(
         codigo=datos.codigo,
-        nombre=datos.nombre,
+        nombre_aula=datos.nombre_aula if datos.nombre_aula else datos.codigo,
         edificio=datos.edificio,
         capacidad=datos.capacidad,
     )
@@ -62,7 +62,7 @@ def actualizar_aula(id_aula: int, datos: AulaCreate, db: Session = Depends(get_d
         raise HTTPException(status_code=400, detail="El codigo ya está en uso")
 
     aula.codigo = datos.codigo
-    aula.nombre = datos.nombre
+    aula.nombre_aula = nombre_aula=datos.nombre_aula if datos.nombre_aula else datos.codigo,
     aula.edificio = datos.edificio
     aula.capacidad = datos.capacidad
 
