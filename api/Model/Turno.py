@@ -7,7 +7,7 @@ class Turno(Base):
 
     id_turno = Column(Integer, primary_key=True)
     
-    turno = Column(Date, nullable=False)
+    fecha = Column(Date, nullable=False)
     hora_inicio = Column(Time, nullable=False)
     hora_fin = Column(Time, nullable=False)
     estado_turno = Column(String(40), nullable=False )

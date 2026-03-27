@@ -58,7 +58,7 @@ def crear_turno(
 
     nuevo_turno = Turno(
         id_usuario=datos.id_usuario,
-        turno=datos.fecha,
+        fecha=datos.fecha,
         hora_inicio=datos.hora_inicio,
         hora_fin=datos.hora_fin,
         estado_turno=datos.estado_turno,

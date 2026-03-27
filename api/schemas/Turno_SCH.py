@@ -11,7 +11,7 @@ class TurnoCreate(BaseModel):
 class TurnoResponse(BaseModel):
     id_turno: int
     id_usuario: int
-    turno: date
+    fecha: date
     hora_inicio: time
     hora_fin: time
     estado_turno: str
