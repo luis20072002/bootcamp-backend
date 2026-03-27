@@ -4,10 +4,11 @@ from sqlalchemy.orm import relationship
 class Aula(Base):
     __tablename__ = "aulas"
 
-    id_aula = Column(String(10), primary_key=True, index=True)
+    id_aula = Column(Integer, primary_key=True, index=True)
     nombre_aula = Column(String(100), nullable=True)
     edificio = Column(String(100), nullable=False)
     capacidad = Column(Integer, nullable=False)
 
     cursos = relationship("Curso", back_populates="aula")
     registros = relationship("Registro", back_populates="aula")
+    

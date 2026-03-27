@@ -51,7 +51,7 @@ def crear_curso(
         raise HTTPException(status_code=400, detail="El id de curso ya existe")
 
     nuevo_curso = Curso(
-        id_curso=datos.id_curso,
+        #id_curso=datos.id_curso,
         nombre_curso=datos.nombre_curso,
         codi_curso=datos.codi_curso,
         id_docente=datos.id_docente,

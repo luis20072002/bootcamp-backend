@@ -23,12 +23,12 @@ def get_aula(id_aula: str, db: Session = Depends(get_db), current_user=Depends(a
 
 @router.post("/", response_model=AulaResponse, status_code=201)
 def crear_aula(datos: AulaCreate, db: Session = Depends(get_db), current_user=Depends(solo_admin)):
-    existe = db.query(Aula).filter(Aula.id_aula == datos.id_aula).first()
-    if existe:
-        raise HTTPException(status_code=400, detail="El id de aula ya existe")
+    #existe = db.query(Aula).filter(Aula.id_aula == datos.id_aula).first()
+    #if existe:
+        #raise HTTPException(status_code=400, detail="El id de aula ya existe")
 
     nueva_aula = Aula(
-        id_aula=datos.id_aula,
+        #id_aula=datos.id_aula,
         nombre_aula=datos.nombre_aula,
         edificio=datos.edificio,
         capacidad=datos.capacidad,

@@ -5,7 +5,7 @@ from api.database.database import Base
 class Curso(Base):
     __tablename__ = "cursos"
 
-    id_curso = Column(String(255), primary_key=True, index=True)
+    id_curso = Column(String(255), primary_key=True, autoincrement=True)
     nombre_curso = Column(String(100), nullable=False)
     codi_curso = Column(String(8), nullable=False)
     id_docente = Column(Integer , ForeignKey("docentes.id_docente"))
