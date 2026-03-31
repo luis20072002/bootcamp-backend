@@ -1,16 +1,19 @@
-from sqlalchemy import Column, String, Integer
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship,mapped_column,Mapped
 from api.database.database import Base
 
 class Docente(Base):
     __tablename__ = "docentes"
-    id_docente = Column(Integer , primary_key=True)
-    nombre = Column(String(100), nullable=False)
-    apellido = Column(String(100), nullable=False)
-    correo =  Column(String(100), nullable=False, unique=True)
-    telefono =  Column(String(100), nullable=False)
+  
+    id_docente: Mapped[int] = mapped_column(primary_key=True)
+    nombre: Mapped[String] = mapped_column(String(100))
+    apellido: Mapped[String] = mapped_column(String(100))
+    correo: Mapped[String] = mapped_column(String(100), unique=True)
+    telefono: Mapped[String] = mapped_column(String(100))
+    
    
 
    
-    cursos = relationship("Curso", back_populates="docente")    # 👈 agrega esta
-    registros = relationship("Registro", back_populates="docente")  # 👈 y esta
+    #cursos = relationship("Curso", back_populates="docente")
+    cursos: Mapped[list['Curso']] = relationship(back_populates='docente')    
+    registros = relationship("Registro", back_populates="docente")  
