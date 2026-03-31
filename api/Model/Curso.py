@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer,ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, mapped_column, Mapped
 from api.database.database import Base
 
 class Curso(Base):
@@ -12,6 +12,7 @@ class Curso(Base):
     id_aula=Column(String(10), ForeignKey("aulas.id_aula"))
 
     docente = relationship("Docente", back_populates="cursos") 
-    aula = relationship("Aula", back_populates="cursos")
+    aula: Mapped['Aula'] = relationship(back_populates='cursos')
+    #aula = relationship("Aula", back_populates="cursos")
     registros = relationship("Registro", back_populates="cursos")
    
