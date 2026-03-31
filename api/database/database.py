@@ -3,7 +3,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 import pyodbc
 DATABASE_URL = "mssql+pyodbc://talento:cartagena@nodossolutions.com:1435/SGS?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL,pool_pre_ping=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

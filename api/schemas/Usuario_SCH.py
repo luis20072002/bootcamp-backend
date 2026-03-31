@@ -8,6 +8,7 @@ class UsuarioCreate(BaseModel):
     pwsd: str
     estado: bool
     rol_id: int
+    correo: str
 
 
 class UsuarioResponse(BaseModel):

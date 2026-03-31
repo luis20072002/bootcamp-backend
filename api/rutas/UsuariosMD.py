@@ -55,6 +55,7 @@ def crear_usuario(datos: UsuarioCreate, db: Session = Depends(get_db), current_u
         rol_id=datos.rol_id,
         fecha_creacion=datetime.now(),
         ultima_actividad=datetime.now(),
+        correo = datos.correo
     )
     db.add(nuevo_usuario)
     db.commit()

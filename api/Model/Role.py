@@ -1,12 +1,13 @@
-from sqlalchemy import Column, String, Integer
-from sqlalchemy.orm import relationship
+from sqlalchemy import String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from api.database.database import Base
 
 class Rol(Base):
     __tablename__ = "ROL"
 
-    rol_id = Column(Integer, primary_key=True)
-    nombre_rol = Column(String(50), nullable=False)
+    rol_id: Mapped[int]= mapped_column(primary_key=True)
+    nombre_rol: Mapped[String] = mapped_column(String(100),nullable=False)
+   
 
+    usuarios: Mapped[list["Usuario"]] = relationship(back_populates="rol")
   
-    usuarios = relationship("Usuario", back_populates="rol")
