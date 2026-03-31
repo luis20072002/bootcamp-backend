@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 class Aula(Base):
     __tablename__ = "aulas"
 
-    id_aula = Column(String(10), primary_key=True, index=True)
+    id_aula = Column(Integer, primary_key=True, index=True,autoincrement=True)
     codigo = Column (String(10),nullable=False )
     nombre_aula = Column(String(100), nullable=True)
     edificio = Column(String(100), nullable=False)
