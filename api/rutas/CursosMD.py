@@ -32,7 +32,7 @@ def get_curso(
     return curso
 
 
-@router.post("/", response_model=CursoResponse, status_code=201)
+@router.post("/", response_model=CursoCreate, status_code=201)
 def crear_curso(
     datos: CursoCreate,
     db: Session = Depends(get_db),
@@ -46,7 +46,7 @@ def crear_curso(
     if not aula:
         raise HTTPException(status_code=404, detail="Aula no encontrada")
 
-    existe = db.query(Curso).filter(Curso.id_curso == datos.id_curso).first()
+    existe = db.query(Curso).filter(Curso.codi_curso == datos.codi_curso).first()
     if existe:
         raise HTTPException(status_code=400, detail="El id de curso ya existe")
 
@@ -65,7 +65,7 @@ def crear_curso(
 
 @router.put("/{id_curso}", response_model=CursoResponse)
 def actualizar_curso(
-    id_curso: str,
+    id_curso: int,
     datos: CursoCreate,
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(solo_admin)
@@ -94,7 +94,7 @@ def actualizar_curso(
 
 @router.delete("/{id_curso}", status_code=200)
 def eliminar_curso(
-    id_curso: str,
+    id_curso: int,
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(solo_admin)
 ):
