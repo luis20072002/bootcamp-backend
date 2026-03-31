@@ -13,7 +13,7 @@ ROL_ADMIN    = 1
 ROL_AUXILIAR = 2
 
 # Modo desarrollo
-DEBUG = True
+DEBUG = False
 
 
 def get_current_user(

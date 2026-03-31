@@ -15,9 +15,10 @@ class Usuario(Base):
     rol_id: Mapped[int] = mapped_column(ForeignKey('ROL.rol_id'))
     
     rol: Mapped['Rol'] = relationship(back_populates='usuarios')
-   
+    horario: Mapped['Horario'] = relationship(back_populates='usuarios')
     planillas = relationship("Planilla",back_populates="usuario")
-    horario = relationship("Horario",back_populates="usuario")
+   
 
+    
 
  

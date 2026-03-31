@@ -1,18 +1,19 @@
 from sqlalchemy import Column, String, Integer,Time,ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from api.database.database import Base
-
+from datetime import time
 
 class Horario(Base):
     __tablename__="horarios_trabajo"
 
-    id_horario = Column(Integer, primary_key=True)
+    id_horario: Mapped[int] = mapped_column(primary_key=True)
+    dia_semana: Mapped[String] = mapped_column(String(20), nullable=False)
+    hora_inicio: Mapped[time] = mapped_column(Time, nullable=False)
+    hora_fin: Mapped[time] = mapped_column(Time,nullable=False)
 
-    dia_semana = Column(String(20), nullable=False)
-    hora_inicio = Column(Time, nullable= False)
-    hora_fin = Column(Time,nullable=False)
+    id_usuario: Mapped[int] = mapped_column(ForeignKey('usuario.id_usuario'))
+    #usuario: relationship("Usuario",back_populates="horario")
+    usuarios: Mapped[list['Usuario']] = relationship(back_populates='horario')
 
-    id_usuario = Column(Integer,ForeignKey("usuario.id_usuario"))
 
-    usuario = relationship("Usuario",back_populates="horario")
-
+    
