@@ -11,8 +11,8 @@ class Curso(Base):
     id_docente = Column(Integer , ForeignKey("docentes.id_docente"))
     id_aula=Column(String(10), ForeignKey("aulas.id_aula"))
 
-    docente = relationship("Docente", back_populates="cursos")
-    #docente: Mapped[] 
+   
+    docente: Mapped['Docente']= relationship(back_populates='cursos') 
     aula: Mapped['Aula'] = relationship(back_populates='cursos')
     #aula = relationship("Aula", back_populates="cursos")
     registros = relationship("Registro", back_populates="cursos")
