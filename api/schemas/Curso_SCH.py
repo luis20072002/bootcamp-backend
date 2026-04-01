@@ -11,7 +11,7 @@ class CursoResponse(BaseModel):
     nombre_curso: str
     codi_curso: str
     id_docente: int
-    id_aula: str
+    id_aula: int
     
     #model_config = {"from_attributes": True}
     class Config:

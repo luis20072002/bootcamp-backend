@@ -22,7 +22,7 @@ def get_cursos(
 
 @router.get("/{id_curso}", response_model=CursoResponse)
 def get_curso(
-    id_curso: str,
+    id_curso: int,
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(admin_o_auxiliar)
 ):
