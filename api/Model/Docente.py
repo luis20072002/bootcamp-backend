@@ -16,4 +16,4 @@ class Docente(Base):
    
    
     cursos: Mapped[list['Curso']] = relationship(back_populates='docente')    
-    registros = relationship("Registro", back_populates="docente")  
+    registros: Mapped['Registro'] = relationship(back_populates='docente')  

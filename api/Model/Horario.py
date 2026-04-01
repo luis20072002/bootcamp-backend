@@ -12,7 +12,7 @@ class Horario(Base):
     hora_fin: Mapped[time] = mapped_column(Time,nullable=False)
 
     id_usuario: Mapped[int] = mapped_column(ForeignKey('usuario.id_usuario'))
-    #usuario: relationship("Usuario",back_populates="horario")
+   
     usuarios: Mapped[list['Usuario']] = relationship(back_populates='horario')
 
 

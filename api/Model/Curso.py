@@ -18,5 +18,5 @@ class Curso(Base):
     docente: Mapped['Docente']= relationship(back_populates='cursos') 
     aula: Mapped['Aula'] = relationship(back_populates='cursos')
     
-    registros = relationship("Registro", back_populates="cursos")
-   
+    
+    registros: Mapped['Registro'] = relationship(back_populates='cursos')

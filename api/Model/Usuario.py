@@ -16,7 +16,8 @@ class Usuario(Base):
     
     rol: Mapped['Rol'] = relationship(back_populates='usuarios')
     horario: Mapped['Horario'] = relationship(back_populates='usuarios')
-    planillas = relationship("Planilla",back_populates="usuario")
+    planillas: Mapped[list['Planilla']]= relationship(back_populates='usuario')
+   
    
 
     
