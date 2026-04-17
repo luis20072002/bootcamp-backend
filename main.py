@@ -17,7 +17,7 @@ app = FastAPI(title="SGS API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],        # en producción cambia esto por la URL de tu frontend
+    allow_origins=["http://localhost:4200"],        # en producción cambia esto por la URL de tu frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
