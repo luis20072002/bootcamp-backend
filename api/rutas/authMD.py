@@ -15,7 +15,7 @@ def login(
     form: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
-    usuario = db.query(Usuario).filter(Usuario.nombre == form.username).first()
+    usuario = db.query(Usuario).filter(Usuario.correo == form.username).first()
 
     if not usuario or not verificar_password(form.password, usuario.pwsd):
         raise HTTPException(status_code=401, detail="Credenciales incorrectas")
