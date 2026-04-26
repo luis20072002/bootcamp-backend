@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from api.schemas.Rol_SCH import RolResponse  # importas el schema de Rol
+from api.schemas.Rol_SCH import RolResponse
 
 
 class UsuarioCreate(BaseModel):
@@ -9,6 +9,7 @@ class UsuarioCreate(BaseModel):
     estado: bool
     rol_id: int
     correo: str
+    id_edificio: int | None = None
 
 
 class UsuarioResponse(BaseModel):
@@ -16,7 +17,8 @@ class UsuarioResponse(BaseModel):
     nombre: str
     estado: bool
     fecha_creacion: datetime
-    rol: RolResponse          # objeto completo en lugar de solo el id
+    rol: RolResponse
+    id_edificio: int | None = None
 
     model_config = {
         "from_attributes": True
@@ -28,3 +30,4 @@ class UsuarioUpdate(BaseModel):
     pwsd: str | None = None
     estado: bool | None = None
     rol_id: int | None = None
+    id_edificio: int | None = None

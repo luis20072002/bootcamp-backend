@@ -11,13 +11,18 @@ from api.rutas.HorarioMD import router as router_Horarios
 from api.rutas.PlanillasMD import router as router_Planillas
 from api.rutas.RegistroMD import router as router_Registros
 from api.rutas.authMD import router as router_Auth
-import api.model as model
+from api.rutas.EdificioMD import router as router_Edificios
+from api.rutas.HorarioClaseMD import router as router_HorariosClase
+from api.rutas.NovedadMD import router as router_Novedades
+from api.rutas.SolicitudMD import router as router_Solicitudes
+from api.rutas.HistorialMD import router as router_Historial
+import api.Model as model
 
 app = FastAPI(title="SGS API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],        # en producción cambia esto por la URL de tu frontend
+    allow_origins=["http://localhost:4200"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -33,3 +38,8 @@ app.include_router(router_Cursos)
 app.include_router(router_Horarios)
 app.include_router(router_Planillas)
 app.include_router(router_Registros)
+app.include_router(router_Edificios)
+app.include_router(router_HorariosClase)
+app.include_router(router_Novedades)
+app.include_router(router_Solicitudes)
+app.include_router(router_Historial)

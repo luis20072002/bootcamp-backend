@@ -3,11 +3,13 @@ import re
 
 PATRON_AULA = re.compile(r'^A[1-9]-[1-9](0[1-9]|1[0-9]|20)$')
 
+
 class AulaCreate(BaseModel):
     codigo: str
     nombre_aula: str | None = None
-    edificio: str
+    piso: int
     capacidad: int
+    id_edificio: int
 
     @field_validator('codigo')
     @classmethod
@@ -19,11 +21,13 @@ class AulaCreate(BaseModel):
             )
         return v.upper()
 
+
 class AulaResponse(BaseModel):
     id_aula: int
     codigo: str
     nombre_aula: str | None
-    edificio: str
+    piso: int
     capacidad: int
+    id_edificio: int
 
     model_config = {"from_attributes": True}

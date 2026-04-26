@@ -1,11 +1,17 @@
 # model/__init__.py
 
-from .Role import Rol          #  primero los padres
+from .Role import Rol
+from .Edificio import Edificio
 from .Aula import Aula
-from .Curso import Curso
 from .Turno import Turno
-from .Usuario import Usuario   #  después los hijos
 from .Docente import Docente
-from .Horario import Horario
+from .Curso import Curso
+from .Usuario import Usuario
 from .Planilla import Planilla
+from .HorarioAuxiliar import HorarioAuxiliar
+from .HorarioExcepcion import HorarioExcepcion
+from .HistorialEdificioAuxiliar import HistorialEdificioAuxiliar
+from .HorarioClase import HorarioClase
 from .Registro import Registro
+from .Novedad import Novedad
+from .Solicitud import Solicitud

@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
+from datetime import datetime
 
 from api.database.database import get_db
-from api.model.Usuario import Usuario
+from api.Model.Usuario import Usuario
 from api.rutas.UsuariosMD import verificar_password
 from api.auth.auth import crear_token
 
@@ -22,6 +23,9 @@ def login(
 
     if not usuario.estado:
         raise HTTPException(status_code=403, detail="Usuario inactivo")
+
+    usuario.ultima_actividad = datetime.now()
+    db.commit()
 
     token = crear_token({"sub": str(usuario.id_usuario), "rol": usuario.rol_id})
     return {"access_token": token, "token_type": "bearer"}

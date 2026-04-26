@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from api.database.database import get_db
-from api.model.Role import Rol
-from api.model.Usuario import Usuario
+from api.Model.Role import Rol
+from api.Model.Usuario import Usuario
 from api.schemas.Rol_SCH import RolCreate, RolResponse
 from api.auth.dependencies import solo_admin
 
