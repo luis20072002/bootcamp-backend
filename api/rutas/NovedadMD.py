@@ -3,10 +3,10 @@ from sqlalchemy.orm import Session
 from datetime import datetime, date
 
 from api.database.database import get_db
-from api.Model.Novedad import Novedad
-from api.Model.Registro import Registro
-from api.Model.Aula import Aula
-from api.Model.Usuario import Usuario
+from api.model.Novedad import Novedad
+from api.model.Registro import Registro
+from api.model.Aula import Aula
+from api.model.Usuario import Usuario
 from api.schemas.Novedad_SCH import NovedadCreate, NovedadResponse
 from api.auth.dependencies import solo_admin, solo_auxiliar, admin_o_auxiliar, ROL_AUXILIAR
 

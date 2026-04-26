@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from api.database.database import get_db
-from api.Model.Turno import Turno
-from api.Model.Planilla import Planilla
-from api.Model.Usuario import Usuario
+from api.model.Turno import Turno
+from api.model.Planilla import Planilla
+from api.model.Usuario import Usuario
 from api.schemas.Turno_SCH import TurnoCreate, TurnoResponse, TurnoUpdate
 from api.auth.dependencies import solo_admin, admin_o_auxiliar
 

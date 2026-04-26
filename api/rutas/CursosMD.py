@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from api.database.database import get_db
-from api.Model.Curso import Curso
-from api.Model.Docente import Docente
-from api.Model.Aula import Aula
-from api.Model.Usuario import Usuario
+from api.model.Curso import Curso
+from api.model.Docente import Docente
+from api.model.Aula import Aula
+from api.model.Usuario import Usuario
 from api.schemas.Curso_SCH import CursoCreate, CursoResponse
 from api.auth.dependencies import solo_admin, admin_o_auxiliar
 

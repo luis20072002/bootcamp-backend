@@ -3,11 +3,11 @@ from sqlalchemy.orm import Session
 from datetime import datetime, date, time
 
 from api.database.database import get_db
-from api.Model.Planilla import Planilla
-from api.Model.Usuario import Usuario
-from api.Model.Turno import Turno
-from api.Model.Edificio import Edificio
-from api.Model.Registro import Registro
+from api.model.Planilla import Planilla
+from api.model.Usuario import Usuario
+from api.model.Turno import Turno
+from api.model.Edificio import Edificio
+from api.model.Registro import Registro
 from api.schemas.Planilla_SCH import PlanillaCreate, PlanillaResponse, PlanillaUpdate
 from api.auth.dependencies import solo_admin, admin_o_auxiliar, ROL_AUXILIAR
 

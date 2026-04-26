@@ -5,8 +5,8 @@ from datetime import datetime
 
 
 from api.database.database import get_db
-from api.Model.Usuario import Usuario
-from api.Model.HistorialEdificioAuxiliar import HistorialEdificioAuxiliar
+from api.model.Usuario import Usuario
+from api.model.HistorialEdificioAuxiliar import HistorialEdificioAuxiliar
 from api.schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse, UsuarioUpdate
 
 from api.auth.dependencies import get_current_user, solo_admin

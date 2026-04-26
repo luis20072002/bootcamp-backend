@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from api.database.database import get_db
-from api.Model.Aula import Aula
-from api.Model.Edificio import Edificio
-from api.Model.Registro import Registro
+from api.model.Aula import Aula
+from api.model.Edificio import Edificio
+from api.model.Registro import Registro
 from api.schemas.Aula_SCH import AulaCreate, AulaResponse
 from api.auth.dependencies import solo_admin, admin_o_auxiliar
 

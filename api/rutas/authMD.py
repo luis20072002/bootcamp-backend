@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from datetime import datetime
 
 from api.database.database import get_db
-from api.Model.Usuario import Usuario
+from api.model.Usuario import Usuario
 from api.rutas.UsuariosMD import verificar_password
 from api.auth.auth import crear_token
 

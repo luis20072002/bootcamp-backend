@@ -3,11 +3,11 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 
 from api.database.database import get_db
-from api.Model.HorarioAuxiliar import HorarioAuxiliar
-from api.Model.HorarioExcepcion import HorarioExcepcion
-from api.Model.Usuario import Usuario
-from api.Model.Turno import Turno
-from api.Model.Planilla import Planilla
+from api.model.HorarioAuxiliar import HorarioAuxiliar
+from api.model.HorarioExcepcion import HorarioExcepcion
+from api.model.Usuario import Usuario
+from api.model.Turno import Turno
+from api.model.Planilla import Planilla
 from api.schemas.HorarioAuxiliar_SCH import (
     HorarioAuxiliarCreate,
     HorarioAuxiliarResponse,

@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from api.database.database import get_db
-from api.Model.HorarioClase import HorarioClase
-from api.Model.Planilla import Planilla
-from api.Model.Aula import Aula
-from api.Model.Docente import Docente
-from api.Model.Curso import Curso
-from api.Model.Turno import Turno
-from api.Model.Usuario import Usuario
+from api.model.HorarioClase import HorarioClase
+from api.model.Planilla import Planilla
+from api.model.Aula import Aula
+from api.model.Docente import Docente
+from api.model.Curso import Curso
+from api.model.Turno import Turno
+from api.model.Usuario import Usuario
 from api.schemas.HorarioClase_SCH import (
     HorarioClaseCreate,
     HorarioClaseResponse,

@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from api.database.database import get_db
-from api.Model.Docente import Docente
-from api.Model.Usuario import Usuario
+from api.model.Docente import Docente
+from api.model.Usuario import Usuario
 from api.schemas.Docente_SCH import DocenteCreate, DocenteResponse
 from api.auth.dependencies import solo_admin, admin_o_auxiliar
 

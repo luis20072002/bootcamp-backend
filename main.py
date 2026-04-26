@@ -16,8 +16,10 @@ from api.rutas.HorarioClaseMD import router as router_HorariosClase
 from api.rutas.NovedadMD import router as router_Novedades
 from api.rutas.SolicitudMD import router as router_Solicitudes
 from api.rutas.HistorialMD import router as router_Historial
-import api.Model as model
+import api.model as model
+from api.database.database import Base,engine
 
+Base.metadata.create_all(bind=engine)
 app = FastAPI(title="SGS API", version="1.0.0")
 
 app.add_middleware(
