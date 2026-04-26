@@ -12,26 +12,19 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login", auto_error=False)
 ROL_ADMIN    = 1
 ROL_AUXILIAR = 2
 
-# Modo desarrollo
-DEBUG = False
-
 
 def get_current_user(
     token: Optional[str] = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ) -> Usuario:
 
-    #  BYPASS
-    if DEBUG:
-        return Usuario(
-            id_usuario=1,
-            nombre="admin",
-            correo="admin@test.com",
-            rol_id=ROL_ADMIN,
-            estado=True
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token no proporcionado",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
-    #  Lógica original
     payload = verificar_token(token)
 
     if not payload:
@@ -41,8 +34,15 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token sin identificador de usuario",
+        )
+
     usuario = db.query(Usuario).filter(
-        Usuario.id_usuario == int(payload.get("sub"))
+        Usuario.id_usuario == int(user_id)
     ).first()
 
     if not usuario or not usuario.estado:

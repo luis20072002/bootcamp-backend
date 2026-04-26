@@ -25,11 +25,31 @@ def verificar_password(password: str, hashed: str) -> bool:
     return pwd_context.verify(password, hashed)
 
 
-@router.get("/me", response_model=UsuarioResponse)
+@router.get("/me")
 def get_mi_perfil(
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
-    return current_user
+    usuario = db.query(Usuario).filter(
+        Usuario.id_usuario == current_user.id_usuario
+    ).first()
+
+
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    return {
+        "id_usuario": usuario.id_usuario,
+        "nombre": usuario.nombre,
+        "correo": usuario.correo,
+        "estado": usuario.estado,
+        "fecha_creacion": str(usuario.fecha_creacion) if usuario.fecha_creacion else None,
+        "rol": {
+            "rol_id": usuario.rol_id,
+            "nombre_rol": usuario.rol.nombre_rol if usuario.rol else "desconocido"
+        },
+        "id_edificio": usuario.id_edificio
+    }
 
 
 @router.get("/", response_model=list[UsuarioResponse])

@@ -15,6 +15,7 @@ class UsuarioCreate(BaseModel):
 class UsuarioResponse(BaseModel):
     id_usuario: int
     nombre: str
+    correo: str
     estado: bool
     fecha_creacion: datetime
     rol: RolResponse
