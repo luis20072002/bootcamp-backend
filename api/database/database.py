@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-import pyodbc
 
 from dotenv import load_dotenv
 import os
