@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import DateTime, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from api.database.database import Base
+from ..database.database import Base
 
 
 class Novedad(Base):

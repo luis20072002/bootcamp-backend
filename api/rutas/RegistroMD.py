@@ -2,17 +2,18 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from datetime import datetime, date
 
-from api.database.database import get_db
-from api.model.Registro import Registro
-from api.model.Turno import Turno
-from api.model.Aula import Aula
-from api.model.Docente import Docente
-from api.model.Curso import Curso
-from api.model.Usuario import Usuario
-from api.model.Planilla import Planilla
-from api.schemas.Registro_SCH import RegistroCreate, RegistroResponse
+from ..database.database import get_db
+from ..model.Registro import Registro
+from ..model.Turno import Turno
+from model.Aula import Aula
+from model.Docente import Docente
+from ..model.Curso import Curso
+from ..model.Usuario import Usuario
+from ..model.Planilla import Planilla
+from ..schemas.Registro_SCH import RegistroCreate, RegistroResponse
 
-from api.auth.dependencies import solo_admin, solo_auxiliar, admin_o_auxiliar, ROL_AUXILIAR, ROL_ADMIN
+from ..auth.dependencies import solo_admin,solo_auxiliar, admin_o_auxiliar,  ROL_AUXILIAR, ROL_ADMIN
+
 
 router = APIRouter(prefix="/registros", tags=["Registros"])
 

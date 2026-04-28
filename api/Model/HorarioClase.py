@@ -2,7 +2,7 @@ from typing import Optional
 from datetime import time
 from sqlalchemy import Time, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from api.database.database import Base
+from ..database.database import Base
 
 
 class HorarioClase(Base):

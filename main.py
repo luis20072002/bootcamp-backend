@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+
 from api.rutas.RolMD import router as router_Roles
 from api.rutas.UsuariosMD import router as router_Usuarios
 from api.rutas.AulaMD import router as router_Aulas

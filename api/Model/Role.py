@@ -1,7 +1,6 @@
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from api.database.database import Base
-
+from ..database.database import Base
 class Rol(Base):
     __tablename__ = "ROL"
 

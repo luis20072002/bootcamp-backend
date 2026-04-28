@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer,Time,ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from api.database.database import Base
+from ..database.database import Base
 from datetime import time
 
 class Horario(Base):
