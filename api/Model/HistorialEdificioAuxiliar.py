@@ -2,7 +2,7 @@ from typing import Optional
 from datetime import datetime
 from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from ..database.database import Base
+from api.database.database import Base
 
 
 class HistorialEdificioAuxiliar(Base):

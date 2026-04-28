@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer,ForeignKey
 from sqlalchemy.orm import relationship, mapped_column, Mapped
-from ..database.database import Base
+from api.database.database import Base
 
 class Curso(Base):
     __tablename__ = "cursos"

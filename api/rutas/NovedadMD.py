@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from datetime import datetime, date
 
-from ..database.database import get_db
-from ..model.Novedad import Novedad
+from api.database.database import get_db
+from api.model.Novedad import Novedad
 from model.Registro import Registro
-from ..model.Aula import Aula
-from ..model.Usuario import Usuario
-from ..schemas.Novedad_SCH import NovedadCreate, NovedadResponse
-from ..auth.dependencies import solo_admin, solo_auxiliar, admin_o_auxiliar, ROL_AUXILIAR
+from api.model.Aula import Aula
+from api.model.Usuario import Usuario
+from api.schemas.Novedad_SCH import NovedadCreate, NovedadResponse
+from api.auth.dependencies import solo_admin, solo_auxiliar, admin_o_auxiliar, ROL_AUXILIAR
 
 
 router = APIRouter(prefix="/novedades", tags=["Novedades"])
