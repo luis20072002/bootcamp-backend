@@ -2,21 +2,21 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 
-from rutas.RolMD import router as router_Roles
-from rutas.UsuariosMD import router as router_Usuarios
-from rutas.AulaMD import router as router_Aulas
-from rutas.DocentesMD import router as router_Docentes
-from rutas.TurnosMD import router as router_Turnos
-from rutas.CursosMD import router as router_Cursos
-from rutas.HorarioMD import router as router_Horarios
-from rutas.PlanillasMD import router as router_Planillas
-from rutas.RegistroMD import router as router_Registros
-from rutas.authMD import router as router_Auth
-from rutas.EdificioMD import router as router_Edificios
-from rutas.HorarioClaseMD import router as router_HorariosClase
-from rutas.NovedadMD import router as router_Novedades
-from rutas.SolicitudMD import router as router_Solicitudes
-from rutas.HistorialMD import router as router_Historial
+from .rutas.RolMD import router as router_Roles
+from .rutas.UsuariosMD import router as router_Usuarios
+from .rutas.AulaMD import router as router_Aulas
+from .rutas.DocentesMD import router as router_Docentes
+from .rutas.TurnosMD import router as router_Turnos
+from .rutas.CursosMD import router as router_Cursos
+from .rutas.HorarioMD import router as router_Horarios
+from .rutas.PlanillasMD import router as router_Planillas
+from .rutas.RegistroMD import router as router_Registros
+from .rutas.authMD import router as router_Auth
+from .rutas.EdificioMD import router as router_Edificios
+from .rutas.HorarioClaseMD import router as router_HorariosClase
+from .rutas.NovedadMD import router as router_Novedades
+from .rutas.SolicitudMD import router as router_Solicitudes
+from .rutas.HistorialMD import router as router_Historial
 import model as model
 from database.database import Base,engine
 
