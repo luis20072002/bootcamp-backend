@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from datetime import datetime, date
 
-from ..database.database import get_db
-from ..model.Solicitud import Solicitud
-from ..model.Registro import Registro
-from ..model.Aula import Aula
-from ..model.Usuario import Usuario
-from ..schemas.Solicitud_SCH import SolicitudCreate, SolicitudResponse, SolicitudUpdateEstado
-from ..auth.dependencies import (
+from api.database.database import get_db
+from api.model.Solicitud import Solicitud
+from api.model.Registro import Registro
+from api.model.Aula import Aula
+from api.model.Usuario import Usuario
+from api.schemas.Solicitud_SCH import SolicitudCreate, SolicitudResponse, SolicitudUpdateEstado
+from api.auth.dependencies import (
     solo_admin,
     solo_auxiliar,
     admin_o_auxiliar,

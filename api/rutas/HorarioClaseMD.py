@@ -2,16 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 
-from ..database.database import get_db
-from ..model.HorarioClase import HorarioClase
-from ..model.Planilla import Planilla
-from ..model.Aula import Aula
-from ..model.Docente import Docente
-from ..model.Curso import Curso
-from ..model.Turno import Turno
-from ..model.Usuario import Usuario
-from ..schemas.HorarioClase_SCH import (HorarioClaseCreate,HorarioClaseResponse,HorarioClaseUpdate)
-from ..auth.dependencies import solo_admin, admin_o_auxiliar
+from api.database.database import get_db
+from api.model.HorarioClase import HorarioClase
+from api.model.Planilla import Planilla
+from api.model.Aula import Aula
+from api.model.Docente import Docente
+from api.model.Curso import Curso
+from api.model.Turno import Turno
+from api.model.Usuario import Usuario
+from api.schemas.HorarioClase_SCH import (HorarioClaseCreate,HorarioClaseResponse,HorarioClaseUpdate)
+from api.auth.dependencies import solo_admin, admin_o_auxiliar
 
 
 router = APIRouter(prefix="/horarios-clase", tags=["HorariosClase"])

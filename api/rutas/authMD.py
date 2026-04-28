@@ -4,11 +4,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from datetime import datetime
 
-from ..database.database import get_db
-from ..model.Usuario import Usuario
-from ..rutas.UsuariosMD import verificar_password, hashear_password
-from ..auth.auth import crear_token
-from ..auth.dependencies import get_current_user
+from api.database.database import get_db
+from api.model.Usuario import Usuario
+from api.rutas.UsuariosMD import verificar_password, hashear_password
+from api.auth.auth import crear_token
+from api.auth.dependencies import get_current_user
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])

@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import DateTime, ForeignKey, String
-from ..database.database import Base
+from api.database.database import Base
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 
 

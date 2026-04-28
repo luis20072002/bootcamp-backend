@@ -4,12 +4,12 @@ from passlib.context import CryptContext
 from datetime import datetime
 
 
-from ..database.database import get_db
-from ..model.Usuario import Usuario
-from ..model.HistorialEdificioAuxiliar import HistorialEdificioAuxiliar
-from ..schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse, UsuarioUpdate
+from api.database.database import get_db
+from api.model.Usuario import Usuario
+from api.model.HistorialEdificioAuxiliar import HistorialEdificioAuxiliar
+from api.schemas.Usuario_SCH import UsuarioCreate, UsuarioResponse, UsuarioUpdate
 
-from ..auth.dependencies import get_current_user, solo_admin
+from api.auth.dependencies import get_current_user, solo_admin
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 

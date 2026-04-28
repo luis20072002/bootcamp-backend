@@ -1,6 +1,6 @@
 from sqlalchemy import String
 from sqlalchemy.orm import relationship, mapped_column, Mapped
-from ..database.database import Base
+from api.database.database import Base
 
 
 class Docente(Base):
