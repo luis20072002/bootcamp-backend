@@ -3,17 +3,17 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 
 
-from api.database.database import get_db
-from api.model.HorarioAuxiliar import HorarioAuxiliar
-from api.model.HorarioExcepcion import HorarioExcepcion
-from api.model.Usuario import Usuario
-from api.model.Turno import Turno
-from api.model.Planilla import Planilla
+from ..database.database import get_db
+from ..model.HorarioAuxiliar import HorarioAuxiliar
+from ..model.HorarioExcepcion import HorarioExcepcion
+from ..model.Usuario import Usuario
+from ..model.Turno import Turno
+from ..model.Planilla import Planilla
 
-from api.schemas.HorarioAuxiliar_SCH import (HorarioAuxiliarCreate,HorarioAuxiliarResponse,HorarioAuxiliarUpdate)
-from api.schemas.HorarioExcepcion_SCH import (HorarioExcepcionCreate,HorarioExcepcionResponse)
+from ..schemas.HorarioAuxiliar_SCH import (HorarioAuxiliarCreate,HorarioAuxiliarResponse,HorarioAuxiliarUpdate)
+from ..schemas.HorarioExcepcion_SCH import (HorarioExcepcionCreate,HorarioExcepcionResponse)
 
-from api.auth.dependencies import solo_admin, admin_o_auxiliar, ROL_AUXILIAR
+from ..auth.dependencies import solo_admin, admin_o_auxiliar, ROL_AUXILIAR
 
 
 router = APIRouter(prefix="/horarios", tags=["Horarios"])

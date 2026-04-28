@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 
-from api.database.database import get_db
-from api.model.Edificio import Edificio
-from api.model.Aula import Aula
-from api.model.Usuario import Usuario
-from api.schemas.Edificio_SCH import EdificioCreate, EdificioResponse, EdificioUpdate
-from api.auth.dependencies import solo_admin, admin_o_auxiliar
+from ..database.database import get_db
+from ..model.Edificio import Edificio
+from ..model.Aula import Aula
+from ..model.Usuario import Usuario
+from ..schemas.Edificio_SCH import EdificioCreate, EdificioResponse, EdificioUpdate
+from ..auth.dependencies import solo_admin, admin_o_auxiliar
 
 
 router = APIRouter(prefix="/edificios", tags=["Edificios"])

@@ -2,7 +2,7 @@ from typing import Optional
 from datetime import datetime
 from sqlalchemy import String, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from api.database.database import Base
+from ..database.database import Base
 
 
 class Planilla(Base):

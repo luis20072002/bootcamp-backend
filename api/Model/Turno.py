@@ -1,7 +1,7 @@
 from datetime import time
 from sqlalchemy import String, Time
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from api.database.database import Base
+from ..database.database import Base
 
 
 class Turno(Base):

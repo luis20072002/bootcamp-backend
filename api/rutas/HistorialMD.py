@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 
-from api.database.database import get_db
-from api.model.HistorialEdificioAuxiliar import HistorialEdificioAuxiliar
-from api.model.Usuario import Usuario
-from api.schemas.Historial_SCH import HistorialEdificioAuxiliarResponse
-from api.auth.dependencies import solo_admin
+from ..database.database import get_db
+from ..model.HistorialEdificioAuxiliar import HistorialEdificioAuxiliar
+from ..model.Usuario import Usuario
+from ..schemas.Historial_SCH import HistorialEdificioAuxiliarResponse
+from ..auth.dependencies import solo_admin
 
 
 router = APIRouter(prefix="/historial", tags=["Historial"])

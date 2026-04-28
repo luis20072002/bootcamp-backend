@@ -1,7 +1,7 @@
 from datetime import date, time
 from sqlalchemy import ForeignKey, Date, Time
 from sqlalchemy.orm import relationship, mapped_column, Mapped
-from api.database.database import Base
+from ..database.database import Base
 
 
 class Registro(Base):
