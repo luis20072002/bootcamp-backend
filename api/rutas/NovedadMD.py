@@ -7,8 +7,9 @@ from ..model.Novedad import Novedad
 from ..model.Registro import Registro
 from ..model.Aula import Aula
 from ..model.Usuario import Usuario
-from ..schemas.Novedad_SCH import NovedadCreate, NovedadResponse
+from ..schemas.Novedad_SCH import NovedadCreate, NovedadResponse, NovedadDetalleResponse
 from ..auth.dependencies import solo_admin, solo_auxiliar, admin_o_auxiliar, ROL_AUXILIAR
+from api.model.Edificio import Edificio
 
 
 router = APIRouter(prefix="/novedades", tags=["Novedades"])
@@ -55,6 +56,54 @@ def get_novedades(
         query = query.filter(Novedad.fecha_novedad <= datetime.combine(fecha_fin, datetime.max.time()))
     return query.all()
 
+@router.get("/detalle", response_model=list[NovedadDetalleResponse])
+def get_novedades_detalle(
+    id_edificio:  int | None = Query(None),
+    id_aula:      int | None = Query(None),
+    id_usuario:   int | None = Query(None),
+    fecha_inicio: date | None = Query(None),
+    fecha_fin:    date | None = Query(None),
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin),
+):
+    """
+    Devuelve todas las novedades con JOIN completo:
+    aula, edificio y auxiliar que reportó.
+    Análogo a GET /registros/detalle.
+    """
+    query = (
+        db.query(
+            Novedad.id_novedad,
+            Novedad.id_registro,
+            Novedad.descripcion,
+            Novedad.fecha_novedad,
+            # Aula (via registro)
+            Aula.id_aula,
+            Aula.codigo.label("aula_codigo"),
+            Aula.nombre_aula.label("aula_nombre"),
+            Aula.piso,
+            # Edificio (via aula)
+            Edificio.id_edificio,
+            Edificio.nombre.label("nombre_edificio"),
+            # Auxiliar
+            Usuario.id_usuario,
+            Usuario.nombre.label("auxiliar_nombre"),
+        )
+        .join(Registro, Registro.id_registro == Novedad.id_registro)
+        .join(Aula,     Aula.id_aula         == Registro.id_aula)
+        .join(Edificio, Edificio.id_edificio == Aula.id_edificio)
+        .join(Usuario,  Usuario.id_usuario   == Registro.id_usuario)
+    )
+ 
+    if id_edificio:  query = query.filter(Edificio.id_edificio == id_edificio)
+    if id_aula:      query = query.filter(Aula.id_aula         == id_aula)
+    if id_usuario:   query = query.filter(Usuario.id_usuario   == id_usuario)
+    if fecha_inicio: query = query.filter(Novedad.fecha_novedad >= fecha_inicio)
+    if fecha_fin:    query = query.filter(Novedad.fecha_novedad <= fecha_fin)
+ 
+    rows = query.all()
+    return [row._asdict() for row in rows]
+ 
 
 @router.get("/{id_novedad}", response_model=NovedadResponse)
 def get_novedad(
