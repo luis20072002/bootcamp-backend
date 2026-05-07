@@ -10,7 +10,8 @@ from api.model.Docente import Docente
 from api.model.Curso import Curso
 from api.model.Usuario import Usuario
 from api.model.Planilla import Planilla
-from api.schemas.Registro_SCH import RegistroCreate, RegistroResponse
+from api.schemas.Registro_SCH import RegistroCreate, RegistroResponse, RegistroDetalleResponse
+from api.model.Edificio import Edificio 
 
 from api.auth.dependencies import solo_admin,solo_auxiliar, admin_o_auxiliar,  ROL_AUXILIAR, ROL_ADMIN
 
@@ -172,6 +173,58 @@ def actualizar_registro(
     db.refresh(registro)
     return registro
 
+
+ # agregar este import arriba
+
+@router.get("/detalle", response_model=list[RegistroDetalleResponse])
+def get_registros_detalle(
+    id_edificio:  int | None = Query(None),
+    id_turno:     int | None = Query(None),
+    id_docente:   int | None = Query(None),
+    fecha_inicio: date | None = Query(None),
+    fecha_fin:    date | None = Query(None),
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(solo_admin)
+):
+    query = (
+        db.query(
+            Registro.id_registro,
+            Registro.asistencia_docente,
+            Registro.uso_medios_audiovisuales,
+            Registro.fecha_registro,
+            Registro.hora_registro,
+            Turno.id_turno,
+            Turno.nombre_turno,
+            Aula.id_aula,
+            Aula.codigo.label("aula_codigo"),
+            Aula.nombre_aula,
+            Edificio.id_edificio,
+            Edificio.nombre.label("nombre_edificio"),
+            Aula.piso,
+            Docente.id_docente,
+            Docente.nombre.label("docente_nombre"),
+            Docente.apellido.label("docente_apellido"),
+            Curso.id_curso,
+            Curso.nombre_curso.label("curso_nombre"),
+            Usuario.id_usuario,
+            Usuario.nombre.label("auxiliar_nombre"),
+        )
+        .join(Turno,    Turno.id_turno       == Registro.id_turno)
+        .join(Aula,     Aula.id_aula         == Registro.id_aula)
+        .join(Edificio, Edificio.id_edificio == Aula.id_edificio)
+        .join(Docente,  Docente.id_docente   == Registro.id_docente)
+        .join(Curso,    Curso.id_curso       == Registro.id_curso)
+        .join(Usuario,  Usuario.id_usuario   == Registro.id_usuario)
+    )
+
+    if id_edificio:  query = query.filter(Edificio.id_edificio == id_edificio)
+    if id_turno:     query = query.filter(Turno.id_turno       == id_turno)
+    if id_docente:   query = query.filter(Docente.id_docente   == id_docente)
+    if fecha_inicio: query = query.filter(Registro.fecha_registro >= fecha_inicio)
+    if fecha_fin:    query = query.filter(Registro.fecha_registro <= fecha_fin)
+
+    rows = query.all()
+    return [row._asdict() for row in rows]
 
 @router.delete("/{id_registro}", status_code=200)
 def eliminar_registro(
