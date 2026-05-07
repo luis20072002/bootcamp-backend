@@ -42,7 +42,7 @@ class RegistroDetalleResponse(BaseModel):
     # Aula
     id_aula:    int
     aula_codigo: str
-    aula_nombre: str | None
+    nombre_aula: str | None
 
     # Edificio (via aula)
     id_edificio:     int
