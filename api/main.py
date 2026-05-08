@@ -25,7 +25,7 @@ app = FastAPI(title="SGS API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["bootcamp-frontend-cp67zciaj-luis20072002s-projects.vercel.app"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
